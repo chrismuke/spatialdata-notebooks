@@ -19,7 +19,15 @@ maintainers = [
 urls.Documentation = "https://spatialdata-notebooks.readthedocs.io/"
 urls.Source = "https://github.com/scverse/spatialdata-notebooks"
 urls.Home-page = "https://github.com/scverse/spatialdata-notebooks"
-dependencies = ["spatialdata", "squidpy>=1.6.2"]
+dependencies = [
+    "igraph>=0.11.8",
+    "ipython>=8.36.0",
+    "jupyterlab>=4.4.2",
+    "leidenalg>=0.10.2",
+    "notebook>=7.4.2",
+    "spatialdata[extra,torch]",
+    "squidpy>=1.6.2",
+]
 
 [project.optional-dependencies]
 dev = [
