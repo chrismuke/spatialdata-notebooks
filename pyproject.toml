@@ -20,6 +20,8 @@ urls.Documentation = "https://spatialdata-notebooks.readthedocs.io/"
 urls.Source = "https://github.com/scverse/spatialdata-notebooks"
 urls.Home-page = "https://github.com/scverse/spatialdata-notebooks"
 dependencies = [
+    "anndata>=0.11.4",
+    "celltypist>=1.6.3",
     "igraph>=0.11.8",
     "ipython>=8.36.0",
     "jupyter-console>=6.6.3",
@@ -27,7 +29,9 @@ dependencies = [
     "jupyterlab-vim>=4.1.4",
     "leidenalg>=0.10.2",
     "notebook>=7.4.2",
+    "scanpy>=1.11.1",
     "sopa>=2.0.7",
+    "spatialdata-plot>=0.2.10",
     "spatialdata[extra,torch]",
     "squidpy>=1.6.2",
 ]
