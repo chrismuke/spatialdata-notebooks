@@ -50,6 +50,9 @@ uv run python celltype_annotate_cli_v2.py --help
 
 # Example: Cell type annotation with organized output
 uv run python celltype_annotate_cli_v2.py xenium_data.zarr reference_data.h5ad --min-clusters 5 --max-clusters 10
+
+# Example: Combine multiple zarr files with spatial translation
+uv run python combine_zarr_cli.py file1.zarr file2.zarr file3.zarr combined.zarr --border 100 --layout vertical
 ```
 
 #### Documentation Building
