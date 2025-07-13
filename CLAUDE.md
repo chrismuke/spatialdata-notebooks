@@ -122,3 +122,12 @@ python3 -msphinx -M html . _build
 - Requires Python >=3.10
 - Uses uv for fast dependency resolution
 - Optional dependencies for development and documentation building
+
+## Testing Files
+
+### Standard Test Files for Development
+When testing zarr combination and spatial data processing tools, always use these standardized test files:
+- **File 1**: `/Users/chrism/datasets/lv_spatialdat_liu/lv_0046706_007.zarr`
+- **File 2**: `/Users/chrism/datasets/lv_spatialdat_liu/lv_0046706_117.zarr`
+
+These files are known to have consistent structure and are representative of typical SpatialData zarr files used in this project.

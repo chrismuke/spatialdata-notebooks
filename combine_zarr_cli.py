@@ -78,15 +78,22 @@ def get_spatial_bounds(sdata: sd.SpatialData, coordinate_system: str = "global")
     # Check points for bounds  
     for point_name, point_data in sdata.points.items():
         if 'x' in point_data.columns and 'y' in point_data.columns:
-            points_min_x = point_data['x'].min()
-            points_min_y = point_data['y'].min()
-            points_max_x = point_data['x'].max()
-            points_max_y = point_data['y'].max()
-            
-            min_x = min(min_x, points_min_x)
-            min_y = min(min_y, points_min_y)
-            max_x = max(max_x, points_max_x)
-            max_y = max(max_y, points_max_y)
+            try:
+                # Force computation for dask arrays
+                points_min_x = point_data['x'].min().compute() if hasattr(point_data['x'].min(), 'compute') else point_data['x'].min()
+                points_min_y = point_data['y'].min().compute() if hasattr(point_data['y'].min(), 'compute') else point_data['y'].min()
+                points_max_x = point_data['x'].max().compute() if hasattr(point_data['x'].max(), 'compute') else point_data['x'].max()
+                points_max_y = point_data['y'].max().compute() if hasattr(point_data['y'].max(), 'compute') else point_data['y'].max()
+                
+                min_x = min(min_x, points_min_x)
+                min_y = min(min_y, points_min_y)
+                max_x = max(max_x, points_max_x)
+                max_y = max(max_y, points_max_y)
+                
+                logging.debug(f"Points {point_name} bounds: x=({points_min_x:.1f}, {points_max_x:.1f}), y=({points_min_y:.1f}, {points_max_y:.1f})")
+            except Exception as e:
+                logging.warning(f"Could not compute bounds for points {point_name}: {e}")
+                # Skip this points dataset for bounds calculation
     
     # Handle case where no spatial elements were found
     if min_x == float('inf'):
@@ -100,6 +107,8 @@ def apply_translation_to_sdata(sdata: sd.SpatialData, translation_x: float, tran
                               coordinate_system: str = "global") -> sd.SpatialData:
     """
     Apply translation transformation to all elements in a SpatialData object.
+    All elements will be translated using the SAME transformation metadata approach
+    to ensure perfect colocalization in napari.
     
     Args:
         sdata: SpatialData object to translate
@@ -110,21 +119,31 @@ def apply_translation_to_sdata(sdata: sd.SpatialData, translation_x: float, tran
     Returns:
         SpatialData object with translation applied
     """
+    if translation_x == 0 and translation_y == 0:
+        return sdata
+        
+    logging.info(f"Applying unified transformation ({translation_x:.1f}, {translation_y:.1f}) to ALL elements")
     translation = Translation([translation_x, translation_y], axes=("x", "y"))
     
-    # Apply translation to all spatial elements
+    # Apply the SAME transformation metadata approach to ALL element types
+    # This ensures perfect colocalization in napari visualization
     for element_type in ['images', 'labels', 'shapes', 'points']:
         element_dict = getattr(sdata, element_type)
         for element_name, element_data in element_dict.items():
-            # Get existing transformation and compose with translation
-            existing_transform = get_transformation(element_data, to_coordinate_system=coordinate_system)
-            
-            # Create a sequence of existing transform + translation
-            from spatialdata.transformations import Sequence
-            new_transform = Sequence([existing_transform, translation])
-            
-            # Set the new transformation
-            set_transformation(element_data, new_transform, to_coordinate_system=coordinate_system)
+            logging.info(f"Applying unified transformation to {element_type}: {element_name}")
+            try:
+                # Get existing transformation and compose with translation
+                existing_transform = get_transformation(element_data, to_coordinate_system=coordinate_system)
+                
+                # Create a sequence of existing transform + translation
+                from spatialdata.transformations import Sequence
+                new_transform = Sequence([existing_transform, translation])
+                
+                # Set the new transformation - this works for all element types in napari
+                set_transformation(element_data, new_transform, to_coordinate_system=coordinate_system)
+                logging.info(f"Successfully applied unified transformation to {element_name}")
+            except Exception as e:
+                logging.warning(f"Failed to apply transformation to {element_name}: {e}")
     
     return sdata
 
@@ -160,18 +179,40 @@ def calculate_layout_positions(zarr_files: List[Path], border: float = 0.0,
     
     # Calculate positions based on layout
     if layout == "vertical":
+        # For centering, calculate the overall X range and find the widest sample
+        all_min_x = min(bounds[0] for bounds in bounds_list)
+        all_max_x = max(bounds[2] for bounds in bounds_list)
+        overall_width = all_max_x - all_min_x
+        
+        # Find the center point of the overall bounding box
+        overall_center_x = (all_min_x + all_max_x) / 2
+        
+        # For proper vertical stacking with no overlap
+        placement_y = 0.0  # Start placing files at Y=0
+        
         for i, (min_x, min_y, max_x, max_y) in enumerate(bounds_list):
-            # For vertical stacking, translate so files are stacked down
-            translation_x = -min_x  # Align left edges
-            translation_y = current_y - min_y  # Stack vertically
+            # For vertical stacking with centering and no overlap
+            file_width = max_x - min_x
+            file_height = max_y - min_y
+            file_center_x = (min_x + max_x) / 2
+            
+            # Center each file relative to the overall center
+            translation_x = overall_center_x - file_center_x
+            
+            # Place file at current placement position, ensuring no overlap
+            translation_y = placement_y - min_y  # Move to placement position
             
             positions.append((translation_x, translation_y))
             
-            # Update current_y for next file (bottom of current file + border)
-            height = max_y - min_y
-            current_y += height + border
+            # Calculate where the next file should be placed (bottom of current file + border)
+            file_bottom_after_translation = placement_y + file_height
+            placement_y = file_bottom_after_translation + border
             
             logging.info(f"File {i+1} ({zarr_files[i].name}): translate by ({translation_x:.1f}, {translation_y:.1f})")
+            logging.info(f"  Original bounds: x=({min_x:.1f}, {max_x:.1f}), y=({min_y:.1f}, {max_y:.1f})")
+            logging.info(f"  File center: {file_center_x:.1f}, Overall center: {overall_center_x:.1f}")
+            logging.info(f"  After translation: placed at Y={placement_y - border - file_height:.1f} to {placement_y - border:.1f}")
+            logging.info(f"  Next file will start at Y={placement_y:.1f} (border={border:.1f})")
     
     elif layout == "horizontal":
         for i, (min_x, min_y, max_x, max_y) in enumerate(bounds_list):
@@ -269,17 +310,42 @@ def combine_zarr_files(
     # Concatenate all SpatialData objects
     logging.info("Concatenating SpatialData objects...")
     try:
-        combined_sdata = sd.concatenate(
-            suffixes,
-            concatenate_tables=True,
-            obs_names_make_unique=True
-        )
+        # Try concatenation with tables first
+        try:
+            combined_sdata = sd.concatenate(
+                suffixes,
+                concatenate_tables=True,
+                obs_names_make_unique=True
+            )
+        except ValueError as e:
+            if "region_key" in str(e):
+                logging.warning(f"Table concatenation failed due to region key mismatch: {e}")
+                logging.warning("Concatenating without tables to preserve spatial data including transcripts")
+                # Concatenate without tables to preserve spatial data (points, images, etc.)
+                combined_sdata = sd.concatenate(
+                    suffixes,
+                    concatenate_tables=False,
+                    obs_names_make_unique=True
+                )
+            else:
+                raise
         
         logging.info(f"Combined SpatialData object created with {len(combined_sdata.coordinate_systems)} coordinate systems")
         
         # Save combined object
         logging.info(f"Saving combined zarr file to: {output_path}")
         combined_sdata.write(output_path)
+        
+        # Ensure the file is self-contained for napari compatibility
+        logging.info("Verifying self-contained status for napari compatibility...")
+        try:
+            test_reload = sd.read_zarr(output_path)
+            if test_reload.is_self_contained():
+                logging.info("Combined zarr file is self-contained and ready for napari")
+            else:
+                logging.warning("Combined zarr file is not self-contained - may have issues with napari")
+        except Exception as e:
+            logging.warning(f"Could not verify self-contained status: {e}")
         
         # Print summary
         logging.info("Combination complete!")
