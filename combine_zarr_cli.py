@@ -106,9 +106,8 @@ def get_spatial_bounds(sdata: sd.SpatialData, coordinate_system: str = "global")
 def apply_translation_to_sdata(sdata: sd.SpatialData, translation_x: float, translation_y: float, 
                               coordinate_system: str = "global") -> sd.SpatialData:
     """
-    Apply translation transformation to all elements in a SpatialData object.
-    All elements will be translated using the SAME transformation metadata approach
-    to ensure perfect colocalization in napari.
+    Apply translation by DIRECTLY modifying coordinates for all spatial elements.
+    This ensures actual coordinate separation that works reliably in napari.
     
     Args:
         sdata: SpatialData object to translate
@@ -122,15 +121,45 @@ def apply_translation_to_sdata(sdata: sd.SpatialData, translation_x: float, tran
     if translation_x == 0 and translation_y == 0:
         return sdata
         
-    logging.info(f"Applying unified transformation ({translation_x:.1f}, {translation_y:.1f}) to ALL elements")
+    logging.info(f"Applying direct coordinate translation ({translation_x:.1f}, {translation_y:.1f}) to all elements")
+    
+    # Handle points by directly modifying coordinates
+    for point_name, point_data in sdata.points.items():
+        logging.info(f"Directly translating coordinates for points: {point_name}")
+        
+        if 'x' in point_data.columns and 'y' in point_data.columns:
+            try:
+                # Modify coordinates directly to ensure actual position changes
+                point_data['x'] = point_data['x'] + translation_x
+                point_data['y'] = point_data['y'] + translation_y
+                
+                logging.info(f"Successfully translated coordinates for {point_name}")
+            except Exception as e:
+                logging.warning(f"Failed to translate coordinates for {point_name}: {e}")
+    
+    # Handle shapes by directly modifying geometry coordinates
+    for shape_name, shape_data in sdata.shapes.items():
+        logging.info(f"Directly translating geometry for shapes: {shape_name}")
+        try:
+            # For GeoPandas GeoDataFrame, translate the geometry
+            if hasattr(shape_data, 'geometry'):
+                # Apply translation to all geometries
+                from shapely.affinity import translate
+                shape_data['geometry'] = shape_data['geometry'].apply(
+                    lambda geom: translate(geom, xoff=translation_x, yoff=translation_y)
+                )
+                logging.info(f"Successfully translated geometry for {shape_name}")
+        except Exception as e:
+            logging.warning(f"Failed to translate geometry for {shape_name}: {e}")
+    
+    # For images and labels, apply transformation metadata (can't modify pixel grids directly)
+    # But first, let's try to understand their coordinate relationship
     translation = Translation([translation_x, translation_y], axes=("x", "y"))
     
-    # Apply the SAME transformation metadata approach to ALL element types
-    # This ensures perfect colocalization in napari visualization
-    for element_type in ['images', 'labels', 'shapes', 'points']:
+    for element_type in ['images', 'labels']:
         element_dict = getattr(sdata, element_type)
         for element_name, element_data in element_dict.items():
-            logging.info(f"Applying unified transformation to {element_type}: {element_name}")
+            logging.info(f"Applying transformation to {element_type}: {element_name}")
             try:
                 # Get existing transformation and compose with translation
                 existing_transform = get_transformation(element_data, to_coordinate_system=coordinate_system)
@@ -139,9 +168,9 @@ def apply_translation_to_sdata(sdata: sd.SpatialData, translation_x: float, tran
                 from spatialdata.transformations import Sequence
                 new_transform = Sequence([existing_transform, translation])
                 
-                # Set the new transformation - this works for all element types in napari
+                # Set the new transformation
                 set_transformation(element_data, new_transform, to_coordinate_system=coordinate_system)
-                logging.info(f"Successfully applied unified transformation to {element_name}")
+                logging.info(f"Successfully applied transformation to {element_name}")
             except Exception as e:
                 logging.warning(f"Failed to apply transformation to {element_name}: {e}")
     
