@@ -187,8 +187,10 @@ def preview_rois(roi_data: Dict):
               help='Show preview of converted ROIs')
 @click.option('--run-analysis', is_flag=True,
               help='Automatically run ROI analysis after conversion')
+@click.option('--results-dir', default='napari_roi_manager_results',
+              help='Output directory for ROI analysis results (if --run-analysis is used)')
 def main(roi_json_path: str, zarr_path: str, output: str, validate: bool, 
-         preview: bool, run_analysis: bool):
+         preview: bool, run_analysis: bool, results_dir: str):
     """
     Convert napari-roi-manager ROIs to roi_umap_analysis format
     
@@ -259,7 +261,7 @@ def main(roi_json_path: str, zarr_path: str, output: str, validate: bool,
                 'uv', 'run', 'python', 'roi_umap_analysis.py',
                 zarr_path,
                 '--roi-file', output,
-                '--output-dir', 'napari_roi_manager_results'
+                '--output-dir', results_dir
             ]
             
             print(f"Running: {' '.join(cmd)}")
@@ -267,7 +269,7 @@ def main(roi_json_path: str, zarr_path: str, output: str, validate: bool,
             
             if result.returncode == 0:
                 print("✅ ROI analysis completed successfully!")
-                print("Check the 'napari_roi_manager_results' directory for results")
+                print(f"Check the '{results_dir}' directory for results")
             else:
                 print("❌ ROI analysis failed:")
                 print(result.stderr)

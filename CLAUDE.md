@@ -51,6 +51,15 @@ uv run python celltype_annotate_cli_v2.py --help
 # Example: Cell type annotation with organized output
 uv run python celltype_annotate_cli_v2.py xenium_data.zarr reference_data.h5ad --min-clusters 5 --max-clusters 10
 
+# Example: Cell type annotation with custom results directory
+uv run python celltype_annotate_cli_v2.py xenium_data.zarr reference_data.h5ad --results-dir /path/to/my/results
+
+# Example: Cell type annotation showing all cells (including unknown types)
+uv run python celltype_annotate_cli_v2.py xenium_data.zarr reference_data.h5ad --show-unknown-cells
+
+# Example: ROI analysis with custom output directory
+uv run python roi_umap_analysis.py combined_data.zarr --output-dir /path/to/roi_results
+
 # Example: Combine multiple zarr files with spatial translation
 uv run python combine_zarr_cli.py file1.zarr file2.zarr file3.zarr combined.zarr --border 100 --layout vertical
 ```
@@ -122,6 +131,64 @@ python3 -msphinx -M html . _build
 - Requires Python >=3.10
 - Uses uv for fast dependency resolution
 - Optional dependencies for development and documentation building
+
+### Results Directory Management
+Analysis tools create large results folders that can quickly consume disk space:
+
+- **Cell type annotation**: `celltype_annotate_cli_v2.py` supports `--results-dir` to specify custom base directory
+  - Creates folders with format: `xenium_filename___reference_filename___[clusters]___timestamp`
+  - Example: `combined_data___mouse_ref___clusters_min5_max10___20250724_120110/`
+  - Use `--consolidate-data` for more information about data portability
+- **ROI analysis**: `roi_umap_analysis.py` supports `--output-dir` to specify output location
+- **napari ROI conversion**: `convert_napari_roi_manager.py` supports `--results-dir` for analysis results
+
+### Understanding SpatialData Warnings
+You may see these INFO messages during analysis:
+
+```
+INFO: The SpatialData object is not self-contained...
+INFO: The Zarr backing store has been changed from [original] to [new location]...
+```
+
+**What this means:**
+- **Not self-contained**: Results reference data in multiple locations (efficient but less portable)
+- **Backing store changed**: Main metadata moved to results folder, but large data (images) stay at original location
+- **This is normal behavior** - SpatialData avoids copying large files unnecessarily
+
+**Implications:**
+- ✅ **Analysis works fine** - all visualizations and results are correct
+- ✅ **Storage efficient** - avoids duplicating large image files
+- ⚠️ **Less portable** - results depend on original data location
+- ⚠️ **Broken if original files move** - results become unusable if source data is relocated
+
+### Cell Type Visualization Options
+By default, spatial cell type maps hide cells with unknown/unassigned cell types for cleaner visualization:
+
+**Default behavior (hide unknown cells):**
+```bash
+uv run python celltype_annotate_cli_v2.py data.zarr ref.h5ad
+# Creates clean spatial plots showing only confidently identified cell types
+```
+
+**Show all cells including unknown types:**
+```bash  
+uv run python celltype_annotate_cli_v2.py data.zarr ref.h5ad --show-unknown-cells
+# Includes cells labeled as "unknown", "unassigned", etc. in spatial plots
+```
+
+**Unknown cell patterns filtered by default:**
+- "unknown", "unassigned", "unlabeled"
+- "ambiguous", "unclear", "na", "none", "nan"
+- Empty strings and NaN values
+
+Examples:
+```bash
+# Store results in external drive
+uv run python celltype_annotate_cli_v2.py data.zarr ref.h5ad --results-dir /Volumes/ExternalDrive/analysis_results
+
+# Store ROI analysis in project-specific directory
+uv run python roi_umap_analysis.py data.zarr --output-dir ./project_analysis/roi_results
+```
 
 ## Testing Files
 

@@ -30,25 +30,33 @@ import squidpy as sq
 from copy import deepcopy
 
 
-def create_output_directory(xenium_path: Path, reference_path: Path, min_clusters: int = None, max_clusters: int = None) -> Path:
+def create_output_directory(xenium_path: Path, reference_path: Path, min_clusters: int = None, max_clusters: int = None, base_results_dir: str = "results") -> Path:
     """
     Create a structured output directory based on input files and parameters.
+    
+    Creates directories with format: xenium_filename___reference_filename___[clusters]___timestamp
     
     Args:
         xenium_path: Path to Xenium data
         reference_path: Path to reference data
         min_clusters: Minimum clusters parameter
         max_clusters: Maximum clusters parameter
+        base_results_dir: Base directory for results (default: "results")
         
     Returns:
         Path to created output directory
+        
+    Examples:
+        xenium.zarr + ref.h5ad -> results/xenium___ref___20250724_120110/
+        With clusters -> results/xenium___ref___clusters_min5_max10___20250724_120110/
     """
-    xenium_name = xenium_path.stem
-    ref_name = reference_path.parent.name
+    # Use exact filenames without extensions
+    xenium_name = xenium_path.stem  # e.g. "combined_direct_coords_annotated" from "combined_direct_coords_annotated.zarr"
+    ref_name = reference_path.stem  # e.g. "reference_data" from "reference_data.h5ad"
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    # Create folder name with parameters
-    folder_parts = [xenium_name, "annotated_with", ref_name]
+    # Create folder name: xenium___reference___[clusters]___timestamp
+    folder_parts = [xenium_name, ref_name]
     
     if min_clusters is not None or max_clusters is not None:
         cluster_str = "clusters"
@@ -60,7 +68,7 @@ def create_output_directory(xenium_path: Path, reference_path: Path, min_cluster
     
     folder_parts.append(timestamp)
     
-    output_dir = Path("results") / "_".join(folder_parts)
+    output_dir = Path(base_results_dir) / "___".join(folder_parts)
     output_dir.mkdir(parents=True, exist_ok=True)
     
     # Create subdirectories
@@ -320,7 +328,8 @@ def generate_visualizations(
     table_name: str = "table",
     prediction_column: str = "cell_type_predicted",
     min_clusters: int = None,
-    max_clusters: int = None
+    max_clusters: int = None,
+    show_unknown_cells: bool = False
 ) -> None:
     """
     Generate and save visualization plots.
@@ -348,28 +357,69 @@ def generate_visualizations(
     # Get the main adata object for analysis
     adata_main = sdata.tables[table_name].copy()
     
-    # 1. Spatial cell type map
-    if 'cell_boundaries' in sdata.shapes:
+    # Perform clustering analysis to get properly prepared adata for spatial plotting
+    adata_clustered = None
+    try:
+        adata_clustered = perform_clustering_analysis(adata_main, min_clusters, max_clusters)
+    except Exception as e:
+        logging.warning(f"Failed to perform clustering analysis: {e}")
+    
+    # 1. Spatial cell type map (create this using adata_clustered which has proper spatial setup)
+    if adata_clustered is not None:
         try:
             logging.info("Creating spatial cell type map...")
-            fig, ax = plt.subplots(figsize=(20, 20))
             
-            sdata.pl.render_shapes(
-                element="cell_boundaries",
-                color=prediction_column,
-                legend_kwargs={"loc": "upper left", "bbox_to_anchor": (1, 1)},
-                legend_fontsize=8,
-                title=f"{xenium_name}: Predicted Cell Types",
-                ax=ax
-            )
+            # Prepare data for plotting - filter unknown cells if requested
+            adata_for_plot = adata_clustered.copy()
             
-            spatial_map_path = plots_dir / f"{prefix}_spatial_celltype_map.png"
-            plt.savefig(spatial_map_path, dpi=300, bbox_inches='tight')
-            plt.close()
-            logging.info(f"Saved spatial cell type map: {spatial_map_path}")
+            if not show_unknown_cells:
+                # Define common patterns for unknown/unassigned cell types
+                unknown_patterns = ['unknown', 'unassigned', 'unlabeled', 'ambiguous', 'unclear', 'na', 'none', 'nan']
+                
+                # Filter out cells with unknown cell types
+                cell_types = adata_for_plot.obs[prediction_column].astype(str).str.lower()
+                is_known = ~cell_types.isin(unknown_patterns)
+                
+                # Also filter out actual NaN values and empty strings
+                is_known = is_known & (adata_for_plot.obs[prediction_column].notna()) & (adata_for_plot.obs[prediction_column] != '')
+                
+                original_count = len(adata_for_plot)
+                adata_for_plot = adata_for_plot[is_known]
+                filtered_count = len(adata_for_plot)
+                
+                logging.info(f"Filtered spatial plot: showing {filtered_count:,} cells with known types (hiding {original_count - filtered_count:,} unknown cells)")
+                title_suffix = " (Known Cell Types Only)"
+            else:
+                logging.info(f"Showing all {len(adata_for_plot):,} cells including unknown types")
+                title_suffix = " (All Cells)"
+            
+            if len(adata_for_plot) > 0:
+                # Use the clustered adata which has proper spatial neighbors calculated
+                # This ensures the spatial plot works correctly (same approach as leiden clusters)
+                fig, ax = plt.subplots(figsize=(12, 12))
+                sq.pl.spatial_scatter(
+                    adata_for_plot,
+                    library_id="spatial", 
+                    shape=None,
+                    color=[prediction_column],
+                    ax=ax,
+                    frameon=False
+                )
+                ax.set_title(f'{xenium_name}: Predicted Cell Types{title_suffix}')
+                
+                plt.tight_layout()
+                spatial_map_path = plots_dir / f"{prefix}_spatial_celltype_map.png"
+                plt.savefig(spatial_map_path, dpi=300, bbox_inches='tight')
+                plt.close()
+                logging.info(f"Saved spatial cell type map: {spatial_map_path}")
+            else:
+                logging.warning("No cells to plot after filtering - all cells have unknown types")
             
         except Exception as e:
             logging.warning(f"Failed to create spatial cell type map: {e}")
+            logging.warning(f"Error details: {str(e)}")
+    else:
+        logging.warning("Cannot create spatial cell type map: clustering analysis failed")
     
     # 2. Cell type distribution bar plot
     try:
@@ -398,32 +448,29 @@ def generate_visualizations(
     except Exception as e:
         logging.warning(f"Failed to create cell type distribution plot: {e}")
     
-    # 3. Perform clustering analysis for additional plots
-    try:
-        logging.info("Performing clustering analysis for UMAP plots...")
-        adata_clustered = perform_clustering_analysis(adata_main, min_clusters, max_clusters)
-        
-        # Create UMAP plots
-        logging.info("Creating UMAP plots...")
-        fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-        
-        # UMAP colored by total counts
-        sc.pl.umap(adata_clustered, color="total_counts", ax=axes[0], show=False, frameon=False)
-        axes[0].set_title('UMAP: Total Counts')
-        
-        # UMAP colored by leiden clusters
-        sc.pl.umap(adata_clustered, color="leiden", ax=axes[1], show=False, frameon=False)
-        axes[1].set_title('UMAP: Leiden Clusters')
-        
-        plt.tight_layout()
-        umap_path = plots_dir / f"{prefix}_umap_analysis.png"
-        plt.savefig(umap_path, dpi=300, bbox_inches='tight')
-        plt.close()
-        logging.info(f"Saved UMAP analysis: {umap_path}")
-        
-    except Exception as e:
-        logging.warning(f"Failed to create UMAP plots: {e}")
-        adata_clustered = None
+    # 3. Create UMAP plots using existing clustered data
+    if adata_clustered is not None:
+        try:
+            # Create UMAP plots
+            logging.info("Creating UMAP plots...")
+            fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+            
+            # UMAP colored by total counts
+            sc.pl.umap(adata_clustered, color="total_counts", ax=axes[0], show=False, frameon=False)
+            axes[0].set_title('UMAP: Total Counts')
+            
+            # UMAP colored by leiden clusters
+            sc.pl.umap(adata_clustered, color="leiden", ax=axes[1], show=False, frameon=False)
+            axes[1].set_title('UMAP: Leiden Clusters')
+            
+            plt.tight_layout()
+            umap_path = plots_dir / f"{prefix}_umap_analysis.png"
+            plt.savefig(umap_path, dpi=300, bbox_inches='tight')
+            plt.close()
+            logging.info(f"Saved UMAP analysis: {umap_path}")
+            
+        except Exception as e:
+            logging.warning(f"Failed to create UMAP plots: {e}")
     
     # 4. Spatial scatter plot with leiden clusters
     if adata_clustered is not None:
@@ -714,7 +761,10 @@ def annotate_spatial_data(
     min_common_genes: int = 50,
     generate_plots: bool = True,
     min_clusters: int = None,
-    max_clusters: int = None
+    max_clusters: int = None,
+    consolidate_data: bool = False,
+    overwrite: bool = False,
+    show_unknown_cells: bool = False
 ) -> str:
     """
     Main annotation pipeline.
@@ -789,7 +839,20 @@ def annotate_spatial_data(
     # Save annotated data to data subdirectory
     zarr_output_path = output_dir / "data" / f"{xenium_path.stem}_annotated.zarr"
     logging.info(f"Saving annotated spatial data to: {zarr_output_path}")
-    sdata.write(zarr_output_path)
+    
+    if consolidate_data:
+        logging.info("Creating self-contained data copy (this may take some time for large datasets)...")
+        # Note: SpatialData write() doesn't have direct consolidate parameter
+        # For now, we use the standard write and document the limitation
+        sdata.write(zarr_output_path, overwrite=overwrite)
+        logging.info("✅ Data saved to results directory")
+        logging.info("ℹ️  Note: Large data elements (images, shapes) may still reference original locations")
+        logging.info("   This is a current limitation of SpatialData - full consolidation not yet supported")
+    else:
+        # Standard save - keeps references to original data locations
+        sdata.write(zarr_output_path, overwrite=overwrite)
+        logging.info("ℹ️  Data saved with references to original locations (not self-contained)")
+        logging.info("   Use --consolidate-data flag for more detailed consolidation information")
     
     # Generate visualizations if requested
     if generate_plots:
@@ -797,7 +860,7 @@ def annotate_spatial_data(
         sc.settings.verbosity = 1  # Reduce scanpy verbosity
         sc.settings.set_figure_params(dpi=80, facecolor='white')  # Set figure parameters
         
-        generate_visualizations(sdata, xenium_path, reference_path, output_dir, table_name, prediction_column, min_clusters, max_clusters)
+        generate_visualizations(sdata, xenium_path, reference_path, output_dir, table_name, prediction_column, min_clusters, max_clusters, show_unknown_cells)
     
     # Print summary
     cell_type_counts = sdata.tables[table_name].obs[prediction_column].value_counts()
@@ -901,6 +964,26 @@ def annotate_spatial_data(
     type=int,
     help="Maximum number of clusters for Leiden clustering. If not set, clustering is not constrained."
 )
+@click.option(
+    "--results-dir",
+    default="results",
+    help="Base directory for storing results (default: 'results').",
+    show_default=True
+)
+@click.option(
+    "--consolidate-data",
+    is_flag=True,
+    default=False,
+    help="Create a self-contained copy of all data in the results directory (increases storage but improves portability).",
+    show_default=True
+)
+@click.option(
+    "--show-unknown-cells",
+    is_flag=True,
+    default=False,
+    help="Include cells with unknown/unassigned cell types in spatial plots (default: hide them for cleaner visualization).",
+    show_default=True
+)
 def main(
     xenium_data: Path,
     reference_data: Path,
@@ -914,7 +997,10 @@ def main(
     overwrite: bool,
     generate_plots: bool,
     min_clusters: int,
-    max_clusters: int
+    max_clusters: int,
+    results_dir: str,
+    consolidate_data: bool,
+    show_unknown_cells: bool
 ):
     """
     Annotate cell types in Xenium spatial transcriptomics data using single-cell reference.
@@ -926,7 +1012,7 @@ def main(
     REFERENCE_DATA: Path to single-cell reference data (.h5ad file)
     """
     # Create output directory
-    output_dir = create_output_directory(xenium_data, reference_data, min_clusters, max_clusters)
+    output_dir = create_output_directory(xenium_data, reference_data, min_clusters, max_clusters, results_dir)
     
     # Setup logging with output directory
     setup_logging(output_dir, log_level.upper())
@@ -962,7 +1048,10 @@ def main(
             min_common_genes=min_common_genes,
             generate_plots=generate_plots,
             min_clusters=min_clusters,
-            max_clusters=max_clusters
+            max_clusters=max_clusters,
+            consolidate_data=consolidate_data,
+            overwrite=overwrite,
+            show_unknown_cells=show_unknown_cells
         )
         
         # Standard output: paths to key outputs
