@@ -2,7 +2,7 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": 11,
+   "execution_count": 6,
    "id": "e269d91c-5cc2-43de-a7cc-04e26db94f6d",
    "metadata": {},
    "outputs": [],
@@ -19,7 +19,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 15,
+   "execution_count": 7,
    "id": "68c91dae-4243-4cfb-9f51-4f102d39d415",
    "metadata": {},
    "outputs": [
@@ -31,26 +31,26 @@
       "root_attr: multiscales\n",
       "root_attr: omero\n",
       "root_attr: spatialdata_attrs\n",
-      "datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.000132625994695, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 3.9992044550517103, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.00053050397878, 7.999158957106812], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 15.992576882290562, 16.005048380311315], 'type': 'scale'}], 'path': '4'}]\n",
+      "datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0, 2.0000929022668155], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000742390497401, 4.000185804533631], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.001484780994803, 8.000371609067262], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 15.991097922848665, 15.99479940564636], 'type': 'scale'}], 'path': '4'}]\n",
       "resolution: 0\n",
-      " - shape ('c', 'y', 'x') = (4, 15081, 38044)\n",
-      " - chunks =  ['1', '1024 (+ 745)', '1024 (+ 156)']\n",
+      " - shape ('c', 'y', 'x') = (4, 10778, 21529)\n",
+      " - chunks =  ['1', '1024 (+ 538)', '1024 (+ 25)']\n",
       " - dtype = uint16\n",
       "resolution: 1\n",
-      " - shape ('c', 'y', 'x') = (4, 7540, 19022)\n",
-      " - chunks =  ['1', '1024 (+ 372)', '1024 (+ 590)']\n",
+      " - shape ('c', 'y', 'x') = (4, 5389, 10764)\n",
+      " - chunks =  ['1', '1024 (+ 269)', '1024 (+ 524)']\n",
       " - dtype = uint16\n",
       "resolution: 2\n",
-      " - shape ('c', 'y', 'x') = (4, 3771, 9511)\n",
-      " - chunks =  ['1', '1024 (+ 699)', '1024 (+ 295)']\n",
+      " - shape ('c', 'y', 'x') = (4, 2694, 5382)\n",
+      " - chunks =  ['1', '1024 (+ 646)', '1024 (+ 262)']\n",
       " - dtype = uint16\n",
       "resolution: 3\n",
-      " - shape ('c', 'y', 'x') = (4, 1885, 4756)\n",
-      " - chunks =  ['1', '1024 (+ 861)', '1024 (+ 660)']\n",
+      " - shape ('c', 'y', 'x') = (4, 1347, 2691)\n",
+      " - chunks =  ['1', '1024 (+ 323)', '1024 (+ 643)']\n",
       " - dtype = uint16\n",
       "resolution: 4\n",
-      " - shape ('c', 'y', 'x') = (4, 943, 2377)\n",
-      " - chunks =  ['1', '943', '1024 (+ 329)']\n",
+      " - shape ('c', 'y', 'x') = (4, 674, 1346)\n",
+      " - chunks =  ['1', '674', '1024 (+ 322)']\n",
       " - dtype = uint16\n",
       "root_attr: multiscales\n",
       "root_attr: omero\n",
@@ -64,15 +64,15 @@
     "home = Path.home()\n",
     "\n",
     "\n",
-    "tissue = \"lv_0046706_053.zarr\"\n",
+    "# tissue = \"lv_0046706_053.zarr\"\n",
     "tissue = \"lv_0046706_007.zarr\" # error\n",
-    "tissue = \"lv_0046706_75_control.zarr\"\n",
-    "tissue = \"lv_0046706_71_control.zarr\"\n",
-    "tissue = \"lv_0046706_117.zarr\" # error\n",
-    "tissue = \"lv_0046859_002.zarr\"\n",
-    "tissue = \"lv_0046859_033.zarr\"\n",
-    "tissue = \"lv_0046859_039.zarr\"\n",
-    "tissue = \"lv_0046859_736_control.zarr\"\n",
+    "# tissue = \"lv_0046706_75_control.zarr\"\n",
+    "# tissue = \"lv_0046706_71_control.zarr\"\n",
+    "# tissue = \"lv_0046706_117.zarr\" # error\n",
+    "# tissue = \"lv_0046859_002.zarr\"\n",
+    "# tissue = \"lv_0046859_033.zarr\"\n",
+    "# tissue = \"lv_0046859_039.zarr\"\n",
+    "# tissue = \"lv_0046859_736_control.zarr\"\n",
     "\n",
     "\n",
     "\n",
@@ -82,7 +82,6 @@
     "\n",
     "# Load the single-cell reference data\n",
     "adata_ref = anndata.read_h5ad(home / \"datasets/scRNAseq_skin/d0c12af4-c0e4-4c7b-873a-70752b449689/original_adata.h5ad\")\n",
-    "# adata_ref = anndata.read_h5ad(home / \"datasets/scRNAseq_skin/0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad\")\n",
     "\n",
     "# Extract the AnnData table from your SpatialData object\n",
     "adata_xenium = sdata.tables[\"table\"]"
@@ -90,7 +89,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 16,
+   "execution_count": 3,
    "id": "4f68be8a",
    "metadata": {},
    "outputs": [
@@ -172,7 +171,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 17,
+   "execution_count": 4,
    "id": "df976fe1-da58-40e4-838d-2ea3a389547d",
    "metadata": {},
    "outputs": [
@@ -210,7 +209,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 18,
+   "execution_count": 5,
    "id": "8dc7135b-4af2-47c5-80db-f4dd899d0ee4",
    "metadata": {},
    "outputs": [
@@ -255,7 +254,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 20,
+   "execution_count": 6,
    "id": "2669adbf-b32c-4418-823f-4e53124ec017",
    "metadata": {},
    "outputs": [
@@ -297,7 +296,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 21,
+   "execution_count": 7,
    "id": "7d30ba1d-9ef5-4ddf-ac8a-c917d44aecc1",
    "metadata": {},
    "outputs": [
@@ -344,7 +343,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 22,
+   "execution_count": 8,
    "id": "650cf950",
    "metadata": {},
    "outputs": [
@@ -355,32 +354,26 @@
       "Aligning table data with the 'cell_boundaries' shapes element...\n",
       "Setting the final, validated metadata...\n",
       "Ensuring the annotation column is the correct data type...\n",
-      "Generating the final plot...\n"
+      "Generating the final plot...\n",
+      "\u001b[34mINFO    \u001b[0m Using \u001b[32m'datashader'\u001b[0m backend with \u001b[32m'None'\u001b[0m as reduction method to speed up plotting. Depending on the         \n",
+      "         reduction method, the value range of the plot might change. Set method to \u001b[32m'matplotlib'\u001b[0m do disable this    \n",
+      "         behaviour.                                                                                                \n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_1579/3352723854.py:9: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
+      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_71527/3352723854.py:9: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
       "  sdata.table.obs['region'] = 'cell_boundaries'\n",
-      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_1579/3352723854.py:10: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
+      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_71527/3352723854.py:10: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
       "  sdata.table.obs['region'] = sdata.table.obs['region'].astype('category')\n",
-      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_1579/3352723854.py:10: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
+      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_71527/3352723854.py:10: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
       "  sdata.table.obs['region'] = sdata.table.obs['region'].astype('category')\n",
-      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_1579/3352723854.py:14: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
+      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_71527/3352723854.py:14: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
       "  sdata.table.uns['spatialdata_attrs'] = {\n",
-      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_1579/3352723854.py:22: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
+      "/var/folders/xz/289tk8xn6zl90c3p1t1jpwxw0000gn/T/ipykernel_71527/3352723854.py:22: DeprecationWarning: Table accessor will be deprecated with SpatialData version 0.1, use sdata.tables instead.\n",
       "  sdata.table.obs['cell_type_predicted'] = sdata.table.obs['cell_type_predicted'].astype('category')\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "\u001b[34mINFO    \u001b[0m Using \u001b[32m'datashader'\u001b[0m backend with \u001b[32m'None'\u001b[0m as reduction method to speed up plotting. Depending on the         \n",
-      "         reduction method, the value range of the plot might change. Set method to \u001b[32m'matplotlib'\u001b[0m do disable this    \n",
-      "         behaviour.                                                                                                \n"
      ]
     },
     {
