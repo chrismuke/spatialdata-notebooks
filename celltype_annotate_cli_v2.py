@@ -532,7 +532,8 @@ def generate_html_report(
     sdata: sd.SpatialData,
     table_name: str = "table",
     prediction_column: str = "cell_type_predicted",
-    run_parameters: dict = None
+    run_parameters: dict = None,
+    zarr_saved: bool = True
 ) -> None:
     """
     Generate a comprehensive HTML report with all results.
@@ -545,6 +546,7 @@ def generate_html_report(
         table_name: Name of table in SpatialData object
         prediction_column: Name of prediction column
         run_parameters: Dictionary of run parameters
+        zarr_saved: Whether the zarr file was saved
     """
     plots_dir = output_dir / "plots"
     report_path = output_dir / "annotation_report.html"
@@ -707,8 +709,15 @@ def generate_html_report(
 
     <div class="section">
         <h2>Files Generated</h2>
-        <ul>
-            <li><strong>Annotated Data:</strong> data/{xenium_path.stem}_annotated.zarr</li>
+        <ul>"""
+    
+    # Add zarr file info conditionally
+    if zarr_saved:
+        html_content += f"<li><strong>Annotated Data:</strong> data/{xenium_path.stem}_annotated.zarr</li>"
+    else:
+        html_content += "<li><strong>Annotated Data:</strong> Not generated (use --save-annotated-zarr to enable)</li>"
+    
+    html_content += """
             <li><strong>Log File:</strong> logs/celltype_annotation.log</li>
             <li><strong>Plots Directory:</strong> plots/</li>
             <li><strong>Run Metadata:</strong> run_metadata.json</li>
@@ -764,7 +773,8 @@ def annotate_spatial_data(
     max_clusters: int = None,
     consolidate_data: bool = False,
     overwrite: bool = False,
-    show_unknown_cells: bool = False
+    show_unknown_cells: bool = False,
+    save_annotated_zarr: bool = False
 ) -> str:
     """
     Main annotation pipeline.
@@ -782,9 +792,10 @@ def annotate_spatial_data(
         generate_plots: Whether to generate visualizations
         min_clusters: Minimum number of clusters for Leiden clustering
         max_clusters: Maximum number of clusters for Leiden clustering
+        save_annotated_zarr: Whether to save the annotated zarr file (default: False)
         
     Returns:
-        Path to saved zarr file
+        Path to saved zarr file or empty string if not saved
     """
     # Load datasets
     logging.info(f"Loading Xenium data from: {xenium_path}")
@@ -836,23 +847,28 @@ def annotate_spatial_data(
             'instance_key': 'cell_id'
         }
     
-    # Save annotated data to data subdirectory
-    zarr_output_path = output_dir / "data" / f"{xenium_path.stem}_annotated.zarr"
-    logging.info(f"Saving annotated spatial data to: {zarr_output_path}")
-    
-    if consolidate_data:
-        logging.info("Creating self-contained data copy (this may take some time for large datasets)...")
-        # Note: SpatialData write() doesn't have direct consolidate parameter
-        # For now, we use the standard write and document the limitation
-        sdata.write(zarr_output_path, overwrite=overwrite)
-        logging.info("✅ Data saved to results directory")
-        logging.info("ℹ️  Note: Large data elements (images, shapes) may still reference original locations")
-        logging.info("   This is a current limitation of SpatialData - full consolidation not yet supported")
+    # Save annotated data to data subdirectory if requested
+    zarr_output_path = ""
+    if save_annotated_zarr:
+        zarr_output_path = output_dir / "data" / f"{xenium_path.stem}_annotated.zarr"
+        logging.info(f"Saving annotated spatial data to: {zarr_output_path}")
+        
+        if consolidate_data:
+            logging.info("Creating self-contained data copy (this may take some time for large datasets)...")
+            # Note: SpatialData write() doesn't have direct consolidate parameter
+            # For now, we use the standard write and document the limitation
+            sdata.write(zarr_output_path, overwrite=overwrite)
+            logging.info("✅ Data saved to results directory")
+            logging.info("ℹ️  Note: Large data elements (images, shapes) may still reference original locations")
+            logging.info("   This is a current limitation of SpatialData - full consolidation not yet supported")
+        else:
+            # Standard save - keeps references to original data locations
+            sdata.write(zarr_output_path, overwrite=overwrite)
+            logging.info("ℹ️  Data saved with references to original locations (not self-contained)")
+            logging.info("   Use --consolidate-data flag for more detailed consolidation information")
+        zarr_output_path = str(zarr_output_path)
     else:
-        # Standard save - keeps references to original data locations
-        sdata.write(zarr_output_path, overwrite=overwrite)
-        logging.info("ℹ️  Data saved with references to original locations (not self-contained)")
-        logging.info("   Use --consolidate-data flag for more detailed consolidation information")
+        logging.info("Skipping zarr file generation (use --save-annotated-zarr to enable)")
     
     # Generate visualizations if requested
     if generate_plots:
@@ -880,7 +896,8 @@ def annotate_spatial_data(
         "Min Common Genes": min_common_genes,
         "Min Clusters": min_clusters if min_clusters is not None else "Not specified",
         "Max Clusters": max_clusters if max_clusters is not None else "Not specified",
-        "Generate Plots": generate_plots
+        "Generate Plots": generate_plots,
+        "Save Annotated Zarr": save_annotated_zarr
     }
     
     # Save metadata
@@ -889,10 +906,10 @@ def annotate_spatial_data(
     # Generate HTML report
     generate_html_report(
         output_dir, xenium_path, reference_path, sdata, 
-        table_name, prediction_column, run_parameters
+        table_name, prediction_column, run_parameters, save_annotated_zarr
     )
     
-    return str(zarr_output_path)
+    return zarr_output_path
 
 
 @click.command()
@@ -984,6 +1001,13 @@ def annotate_spatial_data(
     help="Include cells with unknown/unassigned cell types in spatial plots (default: hide them for cleaner visualization).",
     show_default=True
 )
+@click.option(
+    "--save-annotated-zarr",
+    is_flag=True,
+    default=False,
+    help="Save the annotated zarr file to the results directory (default: False, only generates plots and reports).",
+    show_default=True
+)
 def main(
     xenium_data: Path,
     reference_data: Path,
@@ -1000,12 +1024,14 @@ def main(
     max_clusters: int,
     results_dir: str,
     consolidate_data: bool,
-    show_unknown_cells: bool
+    show_unknown_cells: bool,
+    save_annotated_zarr: bool
 ):
     """
     Annotate cell types in Xenium spatial transcriptomics data using single-cell reference.
     
-    Creates an organized output directory with annotated data, visualizations, logs, and HTML report.
+    Creates an organized output directory with visualizations, logs, and HTML report.
+    Use --save-annotated-zarr to also save the annotated zarr file.
     
     XENIUM_DATA: Path to Xenium spatial data (.zarr file)
     
@@ -1017,11 +1043,12 @@ def main(
     # Setup logging with output directory
     setup_logging(output_dir, log_level.upper())
     
-    # Validate inputs
-    zarr_output_path = output_dir / "data" / f"{xenium_data.stem}_annotated.zarr"
-    if zarr_output_path.exists() and not overwrite:
-        click.echo(f"Error: Output file already exists: {zarr_output_path}. Use --overwrite to overwrite.", err=True)
-        sys.exit(1)
+    # Validate inputs (only check zarr output if we're going to save it)
+    if save_annotated_zarr:
+        zarr_output_path = output_dir / "data" / f"{xenium_data.stem}_annotated.zarr"
+        if zarr_output_path.exists() and not overwrite:
+            click.echo(f"Error: Output file already exists: {zarr_output_path}. Use --overwrite to overwrite.", err=True)
+            sys.exit(1)
     
     if min_clusters is not None and max_clusters is not None and min_clusters > max_clusters:
         click.echo(f"Error: min-clusters ({min_clusters}) cannot be greater than max-clusters ({max_clusters}).", err=True)
@@ -1051,11 +1078,15 @@ def main(
             max_clusters=max_clusters,
             consolidate_data=consolidate_data,
             overwrite=overwrite,
-            show_unknown_cells=show_unknown_cells
+            show_unknown_cells=show_unknown_cells,
+            save_annotated_zarr=save_annotated_zarr
         )
         
         # Standard output: paths to key outputs
-        print(f"Zarr file: {result_path}")
+        if result_path:
+            print(f"Zarr file: {result_path}")
+        else:
+            print("Zarr file: Not generated (use --save-annotated-zarr to enable)")
         print(f"Output directory: {output_dir}")
         print(f"HTML report: {output_dir / 'annotation_report.html'}")
         
