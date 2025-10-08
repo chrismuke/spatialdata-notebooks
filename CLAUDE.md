@@ -57,6 +57,9 @@ uv run python celltype_annotate_cli_v2.py xenium_data.zarr reference_data.h5ad -
 # Example: Cell type annotation showing all cells (including unknown types)
 uv run python celltype_annotate_cli_v2.py xenium_data.zarr reference_data.h5ad --show-unknown-cells
 
+# Example: Cell type annotation using existing trained model
+uv run python celltype_annotate_cli_v2.py xenium_data.zarr reference_data.h5ad --load-model reference_data_cell_type_model_20250724_120110.pkl
+
 # Example: ROI analysis with custom output directory
 uv run python roi_umap_analysis.py combined_data.zarr --output-dir /path/to/roi_results
 

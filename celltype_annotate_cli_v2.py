@@ -188,16 +188,84 @@ def normalize_data(adata: anndata.AnnData, target_sum: float = 1e4) -> None:
     sc.pp.log1p(adata)
 
 
-def train_celltypist_model(adata_ref: anndata.AnnData, label_column: str, feature_selection: bool = False) -> celltypist.models.Model:
-    """Train CellTypist model on reference data."""
+def create_model_save_path(reference_path: Path, label_column: str = "cell_type") -> Path:
+    """
+    Create a unique model save path in the same directory as the reference data.
+
+    Args:
+        reference_path: Path to reference h5ad file
+        label_column: Column name used for training labels
+
+    Returns:
+        Path for saving the model file with unique name
+
+    Examples:
+        reference_data.h5ad -> reference_data_cell_type_model_20250724_120110.pkl
+    """
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    ref_name = reference_path.stem  # e.g. "reference_data" from "reference_data.h5ad"
+    model_filename = f"{ref_name}_{label_column}_model_{timestamp}.pkl"
+    return reference_path.parent / model_filename
+
+
+def save_celltypist_model(model: celltypist.models.Model, save_path: Path) -> None:
+    """
+    Save a trained CellTypist model to disk.
+
+    Args:
+        model: Trained CellTypist model
+        save_path: Path where to save the model
+    """
+    logging.info(f"Saving CellTypist model to: {save_path}")
+    model.write(str(save_path))
+    logging.info("Model saved successfully")
+
+
+def load_celltypist_model(model_path: Path) -> celltypist.models.Model:
+    """
+    Load a CellTypist model from disk.
+
+    Args:
+        model_path: Path to saved model file
+
+    Returns:
+        Loaded CellTypist model
+    """
+    logging.info(f"Loading CellTypist model from: {model_path}")
+    if not model_path.exists():
+        raise FileNotFoundError(f"Model file not found: {model_path}")
+
+    model = celltypist.models.Model.load(str(model_path))
+    logging.info("Model loaded successfully")
+    return model
+
+
+def train_celltypist_model(adata_ref: anndata.AnnData, label_column: str, feature_selection: bool = False,
+                          save_model_path: Path = None) -> celltypist.models.Model:
+    """
+    Train CellTypist model on reference data.
+
+    Args:
+        adata_ref: Reference dataset for training
+        label_column: Column name containing cell type labels
+        feature_selection: Whether to use feature selection
+        save_model_path: Path to save the trained model (optional)
+
+    Returns:
+        Trained CellTypist model
+    """
     logging.info(f"Training CellTypist model using label column: {label_column}")
-    
+
     if label_column not in adata_ref.obs.columns:
         raise ValueError(f"Label column '{label_column}' not found in reference data")
-    
+
     model = celltypist.train(adata_ref, labels=label_column, feature_selection=feature_selection)
     logging.info("Model training completed")
-    
+
+    # Save model if path provided
+    if save_model_path is not None:
+        save_celltypist_model(model, save_model_path)
+
     return model
 
 
@@ -774,11 +842,12 @@ def annotate_spatial_data(
     consolidate_data: bool = False,
     overwrite: bool = False,
     show_unknown_cells: bool = False,
-    save_annotated_zarr: bool = False
+    save_annotated_zarr: bool = False,
+    load_model: Path = None
 ) -> str:
     """
     Main annotation pipeline.
-    
+
     Args:
         xenium_path: Path to Xenium .zarr file
         reference_path: Path to reference .h5ad file
@@ -792,8 +861,12 @@ def annotate_spatial_data(
         generate_plots: Whether to generate visualizations
         min_clusters: Minimum number of clusters for Leiden clustering
         max_clusters: Maximum number of clusters for Leiden clustering
+        consolidate_data: Whether to create self-contained data copy
+        overwrite: Whether to overwrite existing output
+        show_unknown_cells: Whether to include unknown cells in spatial plots
         save_annotated_zarr: Whether to save the annotated zarr file (default: False)
-        
+        load_model: Path to existing model file to load instead of training new one
+
     Returns:
         Path to saved zarr file or empty string if not saved
     """
@@ -823,9 +896,17 @@ def annotate_spatial_data(
     # Normalize data
     normalize_data(adata_ref, target_sum)
     normalize_data(adata_xenium, target_sum)
-    
-    # Train model
-    model = train_celltypist_model(adata_ref, label_column, feature_selection)
+
+    # Model handling: load existing model or train new one
+    if load_model is not None:
+        # Load existing model
+        logging.info(f"Loading existing CellTypist model from: {load_model}")
+        model = load_celltypist_model(load_model)
+    else:
+        # Train new model and save it by default
+        model_save_path = create_model_save_path(reference_path, label_column)
+        logging.info(f"Training new CellTypist model and saving to: {model_save_path}")
+        model = train_celltypist_model(adata_ref, label_column, feature_selection, model_save_path)
     
     # Predict cell types
     predictions = predict_cell_types(adata_xenium, model)
@@ -897,7 +978,8 @@ def annotate_spatial_data(
         "Min Clusters": min_clusters if min_clusters is not None else "Not specified",
         "Max Clusters": max_clusters if max_clusters is not None else "Not specified",
         "Generate Plots": generate_plots,
-        "Save Annotated Zarr": save_annotated_zarr
+        "Save Annotated Zarr": save_annotated_zarr,
+        "Load Model": str(load_model) if load_model is not None else "None (trained new model)"
     }
     
     # Save metadata
@@ -1008,6 +1090,11 @@ def annotate_spatial_data(
     help="Save the annotated zarr file to the results directory (default: False, only generates plots and reports).",
     show_default=True
 )
+@click.option(
+    "--load-model",
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to existing CellTypist model file (.pkl). If provided, skips model training and uses this model instead."
+)
 def main(
     xenium_data: Path,
     reference_data: Path,
@@ -1025,7 +1112,8 @@ def main(
     results_dir: str,
     consolidate_data: bool,
     show_unknown_cells: bool,
-    save_annotated_zarr: bool
+    save_annotated_zarr: bool,
+    load_model: Path
 ):
     """
     Annotate cell types in Xenium spatial transcriptomics data using single-cell reference.
@@ -1079,7 +1167,8 @@ def main(
             consolidate_data=consolidate_data,
             overwrite=overwrite,
             show_unknown_cells=show_unknown_cells,
-            save_annotated_zarr=save_annotated_zarr
+            save_annotated_zarr=save_annotated_zarr,
+            load_model=load_model
         )
         
         # Standard output: paths to key outputs
