@@ -891,14 +891,15 @@ def attach_table_to_regions(
     # Auto-detect available regions if not specified
     if attach_to is None:
         attach_to = []
-        # Prefer labels (faster) over shapes
+        # Prefer shapes first (they work for visualization), then labels
+        # Note: The PRIMARY region (first in list) is what napari will use for display
+        for shape_name in ['cell_boundaries', 'cell_circles', 'nucleus_boundaries']:
+            if shape_name in sdata.shapes:
+                attach_to.append(shape_name)
+        # Also include labels (faster loading, but won't show annotations in napari)
         for label_name in ['cell_labels', 'nucleus_labels']:
             if label_name in sdata.labels:
                 attach_to.append(label_name)
-        # Also include shapes if they exist
-        for shape_name in ['cell_boundaries', 'nucleus_boundaries', 'cell_circles']:
-            if shape_name in sdata.shapes:
-                attach_to.append(shape_name)
 
     # Filter to only existing regions
     available_regions = []
@@ -953,6 +954,15 @@ def attach_table_to_regions(
         logging.info(f"   ⚡ {labels_count} label region(s) - FAST loading in napari")
     if shapes_count > 0:
         logging.info(f"   🐌 {shapes_count} shape region(s) - slower loading in napari")
+
+    # Important napari visualization note
+    if len(available_regions) > 1:
+        logging.info(f"\n   ⚠️  IMPORTANT for napari visualization:")
+        logging.info(f"   Table annotations will only appear in napari for the PRIMARY region: {primary_region}")
+        logging.info(f"   This is because obs['region'] can only point to one spatial element at a time.")
+        logging.info(f"   To see annotations on a different layer, you'll need to:")
+        logging.info(f"   1. Re-run with that layer as primary (e.g., --attach-to {available_regions[0]})")
+        logging.info(f"   2. Or manually change obs['region'] values in the zarr file")
 
     return available_regions
 
