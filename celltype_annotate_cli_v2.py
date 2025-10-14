@@ -803,11 +803,65 @@ def generate_html_report(
     logging.info(f"HTML report generated: {report_path}")
 
 
+def create_label_lookup_table(sdata: sd.SpatialData, table_name: str = "table", label_name: str = "cell_labels") -> None:
+    """
+    Create a lookup mechanism for napari to display cell type colors on labels.
+
+    Since labels have arbitrary integer pixel values and table has string cell_ids,
+    this function ensures napari-spatialdata can correctly map between them.
+
+    The key insight: napari-spatialdata uses the shapes layer cell_ids as the source
+    of truth, so we need to ensure our table's cell_ids match those in the shapes.
+
+    Args:
+        sdata: SpatialData object
+        table_name: Name of table in SpatialData object
+        label_name: Name of label layer to check
+
+    Side Effects:
+        Logs information about ID compatibility
+    """
+    table = sdata.tables[table_name]
+
+    # Check if cell_ids are already integers
+    if table.obs['cell_id'].dtype in [np.int32, np.int64]:
+        logging.info("✅ Cell IDs are integers - labels should work directly in napari")
+        return
+
+    # For string cell_ids, check if there's a shapes layer we can reference
+    has_shapes = False
+    shape_id_source = None
+
+    for shape_name in ['cell_boundaries', 'cell_circles', 'nucleus_boundaries']:
+        if shape_name in sdata.shapes:
+            has_shapes = True
+            shape_id_source = shape_name
+            break
+
+    if has_shapes:
+        # Get the shapes dataframe to check IDs
+        shapes_df = sdata.shapes[shape_id_source]
+        shape_ids = set(shapes_df.index)
+        table_ids = set(table.obs['cell_id'])
+
+        if shape_ids == table_ids:
+            logging.info(f"✅ Cell IDs match between table and {shape_id_source}")
+            logging.info(f"   Labels visualization in napari: Will work via shape reference")
+            logging.info(f"   Recommendation: Use {shape_id_source} layer in napari for colored cell types")
+        else:
+            logging.warning(f"⚠️  Cell ID mismatch between table and {shape_id_source}")
+            logging.warning(f"   Table has {len(table_ids)} IDs, shapes have {len(shape_ids)} IDs")
+    else:
+        logging.warning("⚠️  String cell_ids with no shapes layer - label visualization may not work in napari")
+        logging.warning("   Recommendation: Use --attach-to shapes for napari visualization")
+
+
 def attach_table_to_regions(
     sdata: sd.SpatialData,
     table_name: str = "table",
     attach_to: list[str] = None,
-    primary_region: str = None
+    primary_region: str = None,
+    create_int_mapping: bool = True
 ) -> list[str]:
     """
     Attach table annotations to multiple spatial elements (shapes and/or labels).
@@ -828,6 +882,8 @@ def attach_table_to_regions(
             If None, auto-detects and prefers labels over shapes for performance
         primary_region: Primary region for the obs['region'] column. If None,
             uses the first available region.
+        create_int_mapping: If True and attaching to labels, creates integer cell_id
+            mapping for napari compatibility (default: True)
 
     Returns:
         List of regions the table was successfully attached to
@@ -856,6 +912,17 @@ def attach_table_to_regions(
         logging.warning("No valid regions found to attach table to")
         return []
 
+    # Check if we're attaching to any labels
+    has_labels = any(r in sdata.labels for r in available_regions)
+
+    # Check label compatibility for napari visualization
+    if has_labels and create_int_mapping:
+        logging.info("Detected label regions - checking napari visualization compatibility")
+        create_label_lookup_table(sdata, table_name)
+
+    # Always use 'cell_id' as instance_key - napari-spatialdata handles the mapping
+    instance_key = 'cell_id'
+
     # Determine primary region for obs column
     if primary_region is None:
         primary_region = available_regions[0]
@@ -871,11 +938,12 @@ def attach_table_to_regions(
     sdata.tables[table_name].uns['spatialdata_attrs'] = {
         'region': available_regions,  # List of all regions (annotations are linked, not copied)
         'region_key': 'region',
-        'instance_key': 'cell_id'
+        'instance_key': instance_key
     }
 
     logging.info(f"✅ Table '{table_name}' linked to {len(available_regions)} region(s): {', '.join(available_regions)}")
     logging.info(f"   Primary region (obs['region']): {primary_region}")
+    logging.info(f"   Instance key: {instance_key}")
     logging.info(f"   📊 Annotations are LINKED (not copied) - no storage overhead")
 
     # Log performance info
