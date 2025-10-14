@@ -803,26 +803,112 @@ def generate_html_report(
     logging.info(f"HTML report generated: {report_path}")
 
 
+def attach_table_to_regions(
+    sdata: sd.SpatialData,
+    table_name: str = "table",
+    attach_to: list[str] = None,
+    primary_region: str = None
+) -> list[str]:
+    """
+    Attach table annotations to multiple spatial elements (shapes and/or labels).
+
+    The annotations are LINKED (not copied) - there's only one table that multiple
+    spatial elements can reference. This means no storage overhead for attaching
+    to multiple regions.
+
+    Args:
+        sdata: SpatialData object
+        table_name: Name of table in SpatialData object
+        attach_to: List of region names to attach to. Can include:
+            - 'cell_labels' (raster - fast in napari)
+            - 'cell_boundaries' (shapes - slower in napari)
+            - 'nucleus_labels' (raster - fast in napari)
+            - 'nucleus_boundaries' (shapes - slower in napari)
+            - 'cell_circles' (shapes)
+            If None, auto-detects and prefers labels over shapes for performance
+        primary_region: Primary region for the obs['region'] column. If None,
+            uses the first available region.
+
+    Returns:
+        List of regions the table was successfully attached to
+    """
+    # Auto-detect available regions if not specified
+    if attach_to is None:
+        attach_to = []
+        # Prefer labels (faster) over shapes
+        for label_name in ['cell_labels', 'nucleus_labels']:
+            if label_name in sdata.labels:
+                attach_to.append(label_name)
+        # Also include shapes if they exist
+        for shape_name in ['cell_boundaries', 'nucleus_boundaries', 'cell_circles']:
+            if shape_name in sdata.shapes:
+                attach_to.append(shape_name)
+
+    # Filter to only existing regions
+    available_regions = []
+    for region in attach_to:
+        if region in sdata.shapes or region in sdata.labels:
+            available_regions.append(region)
+        else:
+            logging.warning(f"Region '{region}' not found in spatial data, skipping")
+
+    if not available_regions:
+        logging.warning("No valid regions found to attach table to")
+        return []
+
+    # Determine primary region for obs column
+    if primary_region is None:
+        primary_region = available_regions[0]
+    elif primary_region not in available_regions:
+        logging.warning(f"Primary region '{primary_region}' not in available regions, using '{available_regions[0]}'")
+        primary_region = available_regions[0]
+
+    # Set the obs region column to primary region
+    sdata.tables[table_name].obs['region'] = primary_region
+    sdata.tables[table_name].obs['region'] = sdata.tables[table_name].obs['region'].astype('category')
+
+    # Set spatialdata_attrs to link to all regions
+    sdata.tables[table_name].uns['spatialdata_attrs'] = {
+        'region': available_regions,  # List of all regions (annotations are linked, not copied)
+        'region_key': 'region',
+        'instance_key': 'cell_id'
+    }
+
+    logging.info(f"✅ Table '{table_name}' linked to {len(available_regions)} region(s): {', '.join(available_regions)}")
+    logging.info(f"   Primary region (obs['region']): {primary_region}")
+    logging.info(f"   📊 Annotations are LINKED (not copied) - no storage overhead")
+
+    # Log performance info
+    labels_count = sum(1 for r in available_regions if r in sdata.labels)
+    shapes_count = sum(1 for r in available_regions if r in sdata.shapes)
+    if labels_count > 0:
+        logging.info(f"   ⚡ {labels_count} label region(s) - FAST loading in napari")
+    if shapes_count > 0:
+        logging.info(f"   🐌 {shapes_count} shape region(s) - slower loading in napari")
+
+    return available_regions
+
+
 def save_run_metadata(output_dir: Path, run_parameters: dict) -> None:
     """
     Save run metadata and parameters to JSON file.
-    
+
     Args:
         output_dir: Output directory
         run_parameters: Dictionary of run parameters
     """
     metadata_path = output_dir / "run_metadata.json"
-    
+
     metadata = {
         "timestamp": datetime.now().isoformat(),
         "parameters": run_parameters,
         "tool_version": "2.0.0",
         "command": " ".join(sys.argv)
     }
-    
+
     with open(metadata_path, 'w') as f:
         json.dump(metadata, f, indent=2)
-    
+
     logging.info(f"Run metadata saved: {metadata_path}")
 
 
@@ -843,7 +929,8 @@ def annotate_spatial_data(
     overwrite: bool = False,
     show_unknown_cells: bool = False,
     save_annotated_zarr: bool = False,
-    load_model: Path = None
+    load_model: Path = None,
+    attach_to: str = "auto"
 ) -> str:
     """
     Main annotation pipeline.
@@ -866,6 +953,11 @@ def annotate_spatial_data(
         show_unknown_cells: Whether to include unknown cells in spatial plots
         save_annotated_zarr: Whether to save the annotated zarr file (default: False)
         load_model: Path to existing model file to load instead of training new one
+        attach_to: Comma-separated list of regions to attach annotations to, or special values:
+            - "auto" (default): Auto-detect and attach to all available regions (labels + shapes)
+            - "labels": Only attach to label regions (cell_labels, nucleus_labels) - fastest in napari
+            - "shapes": Only attach to shape regions (cell_boundaries, nucleus_boundaries, cell_circles)
+            - Custom: e.g., "cell_labels,cell_boundaries" for specific regions
 
     Returns:
         Path to saved zarr file or empty string if not saved
@@ -915,18 +1007,29 @@ def annotate_spatial_data(
     logging.info(f"Adding predictions as column: {prediction_column}")
     sdata.tables[table_name].obs[prediction_column] = predictions['predicted_labels']
     sdata.tables[table_name].obs[prediction_column] = sdata.tables[table_name].obs[prediction_column].astype('category')
-    
-    # Fix spatial data metadata for consistency
-    logging.info("Fixing spatial data metadata")
-    if 'cell_boundaries' in sdata.shapes:
-        sdata.tables[table_name].obs['region'] = 'cell_boundaries'
-        sdata.tables[table_name].obs['region'] = sdata.tables[table_name].obs['region'].astype('category')
-        
-        sdata.tables[table_name].uns['spatialdata_attrs'] = {
-            'region': 'cell_boundaries',
-            'region_key': 'region',
-            'instance_key': 'cell_id'
-        }
+
+    # Parse attach_to parameter and attach table to regions
+    logging.info("Attaching table annotations to spatial regions")
+    attach_regions = None
+
+    if attach_to == "auto":
+        # Auto-detect all available regions
+        attach_regions = None  # Let attach_table_to_regions auto-detect
+    elif attach_to == "labels":
+        # Only labels (fast in napari)
+        attach_regions = ['cell_labels', 'nucleus_labels']
+    elif attach_to == "shapes":
+        # Only shapes (slower in napari)
+        attach_regions = ['cell_boundaries', 'nucleus_boundaries', 'cell_circles']
+    else:
+        # Custom comma-separated list
+        attach_regions = [r.strip() for r in attach_to.split(',')]
+
+    attached_regions = attach_table_to_regions(
+        sdata,
+        table_name=table_name,
+        attach_to=attach_regions
+    )
     
     # Save annotated data to data subdirectory if requested
     zarr_output_path = ""
@@ -979,7 +1082,8 @@ def annotate_spatial_data(
         "Max Clusters": max_clusters if max_clusters is not None else "Not specified",
         "Generate Plots": generate_plots,
         "Save Annotated Zarr": save_annotated_zarr,
-        "Load Model": str(load_model) if load_model is not None else "None (trained new model)"
+        "Load Model": str(load_model) if load_model is not None else "None (trained new model)",
+        "Attach To Regions": f"{attach_to} → {', '.join(attached_regions)}" if attached_regions else attach_to
     }
     
     # Save metadata
@@ -1095,6 +1199,19 @@ def annotate_spatial_data(
     type=click.Path(exists=True, path_type=Path),
     help="Path to existing CellTypist model file (.pkl). If provided, skips model training and uses this model instead."
 )
+@click.option(
+    "--attach-to",
+    default="auto",
+    help=(
+        "Regions to attach cell type annotations to. Options: "
+        "'auto' (all available - default), "
+        "'labels' (cell_labels, nucleus_labels - fastest in napari), "
+        "'shapes' (cell_boundaries, nucleus_boundaries, cell_circles), "
+        "or custom comma-separated list (e.g., 'cell_labels,cell_boundaries'). "
+        "Annotations are LINKED (not copied), so no storage overhead."
+    ),
+    show_default=True
+)
 def main(
     xenium_data: Path,
     reference_data: Path,
@@ -1113,7 +1230,8 @@ def main(
     consolidate_data: bool,
     show_unknown_cells: bool,
     save_annotated_zarr: bool,
-    load_model: Path
+    load_model: Path,
+    attach_to: str
 ):
     """
     Annotate cell types in Xenium spatial transcriptomics data using single-cell reference.
@@ -1168,7 +1286,8 @@ def main(
             overwrite=overwrite,
             show_unknown_cells=show_unknown_cells,
             save_annotated_zarr=save_annotated_zarr,
-            load_model=load_model
+            load_model=load_model,
+            attach_to=attach_to
         )
         
         # Standard output: paths to key outputs
