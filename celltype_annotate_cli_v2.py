@@ -1166,13 +1166,16 @@ def annotate_spatial_data(
     
     # Save metadata
     save_run_metadata(output_dir, run_parameters)
-    
-    # Generate HTML report
-    generate_html_report(
-        output_dir, xenium_path, reference_path, sdata, 
-        table_name, prediction_column, run_parameters, save_annotated_zarr
-    )
-    
+
+    # Generate HTML report (only if plots were generated)
+    if generate_plots:
+        generate_html_report(
+            output_dir, xenium_path, reference_path, sdata,
+            table_name, prediction_column, run_parameters, save_annotated_zarr
+        )
+    else:
+        logging.info("Skipping HTML report generation (no plots generated)")
+
     return zarr_output_path
 
 
@@ -1290,6 +1293,17 @@ def annotate_spatial_data(
     ),
     show_default=True
 )
+@click.option(
+    "--zarr-only",
+    is_flag=True,
+    default=False,
+    help=(
+        "Only generate the annotated zarr file, skip all analysis and visualizations. "
+        "Automatically enables --save-annotated-zarr and disables --generate-plots. "
+        "Much faster when you only need the annotations."
+    ),
+    show_default=True
+)
 def main(
     xenium_data: Path,
     reference_data: Path,
@@ -1309,23 +1323,39 @@ def main(
     show_unknown_cells: bool,
     save_annotated_zarr: bool,
     load_model: Path,
-    attach_to: str
+    attach_to: str,
+    zarr_only: bool
 ):
     """
     Annotate cell types in Xenium spatial transcriptomics data using single-cell reference.
-    
+
     Creates an organized output directory with visualizations, logs, and HTML report.
     Use --save-annotated-zarr to also save the annotated zarr file.
-    
+
     XENIUM_DATA: Path to Xenium spatial data (.zarr file)
-    
+
     REFERENCE_DATA: Path to single-cell reference data (.h5ad file)
     """
+    # If zarr-only mode, override related flags
+    if zarr_only:
+        save_annotated_zarr = True
+        generate_plots = False
+
     # Create output directory
     output_dir = create_output_directory(xenium_data, reference_data, min_clusters, max_clusters, results_dir)
-    
+
     # Setup logging with output directory
     setup_logging(output_dir, log_level.upper())
+
+    # Log zarr-only mode after logging is configured
+    if zarr_only:
+        logging.info("=" * 80)
+        logging.info("ZARR-ONLY MODE ENABLED")
+        logging.info("  - Annotated zarr file will be saved")
+        logging.info("  - All visualizations and plots will be SKIPPED")
+        logging.info("  - HTML report generation will be SKIPPED")
+        logging.info("  - This mode is much faster when you only need the annotations")
+        logging.info("=" * 80)
     
     # Validate inputs (only check zarr output if we're going to save it)
     if save_annotated_zarr:
