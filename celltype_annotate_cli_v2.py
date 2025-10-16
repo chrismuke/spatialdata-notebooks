@@ -28,6 +28,7 @@ import spatialdata as sd
 import spatialdata_plot  # noqa
 import squidpy as sq
 from copy import deepcopy
+import openpyxl  # For Excel export
 
 
 def create_output_directory(xenium_path: Path, reference_path: Path, min_clusters: int = None, max_clusters: int = None, base_results_dir: str = "results") -> Path:
@@ -785,7 +786,8 @@ def generate_html_report(
     else:
         html_content += "<li><strong>Annotated Data:</strong> Not generated (use --save-annotated-zarr to enable)</li>"
     
-    html_content += """
+    html_content += f"""
+            <li><strong>Cell Type Summary (Excel):</strong> data/{xenium_path.stem}_celltype_summary.xlsx</li>
             <li><strong>Log File:</strong> logs/celltype_annotation.log</li>
             <li><strong>Plots Directory:</strong> plots/</li>
             <li><strong>Run Metadata:</strong> run_metadata.json</li>
@@ -967,6 +969,58 @@ def attach_table_to_regions(
     return available_regions
 
 
+def export_celltype_summary_to_excel(
+    sdata: sd.SpatialData,
+    output_dir: Path,
+    xenium_path: Path,
+    reference_path: Path,
+    table_name: str = "table",
+    prediction_column: str = "cell_type_predicted"
+) -> None:
+    """
+    Export cell type summary to Excel file.
+
+    Creates an Excel file with columns: ID, celltype, cellcount
+    Each row represents one cell type with its count.
+
+    Args:
+        sdata: SpatialData object with annotations
+        output_dir: Output directory
+        xenium_path: Path to Xenium data (for filename generation)
+        reference_path: Path to reference data (for filename generation)
+        table_name: Name of table in SpatialData object
+        prediction_column: Name of prediction column
+    """
+    data_dir = output_dir / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    # Generate descriptive filename
+    xenium_name = xenium_path.stem
+    ref_name = reference_path.stem
+    excel_filename = f"{xenium_name}_celltype_summary.xlsx"
+    excel_path = data_dir / excel_filename
+
+    # Get cell type counts
+    cell_type_counts = sdata.tables[table_name].obs[prediction_column].value_counts()
+
+    # Create DataFrame with required columns: ID, celltype, cellcount
+    summary_df = pd.DataFrame({
+        'ID': range(1, len(cell_type_counts) + 1),
+        'celltype': cell_type_counts.index,
+        'cellcount': cell_type_counts.values
+    })
+
+    # Export to Excel
+    logging.info(f"Exporting cell type summary to Excel: {excel_path}")
+    summary_df.to_excel(excel_path, index=False, engine='openpyxl')
+
+    # Log summary statistics
+    logging.info(f"Excel export complete:")
+    logging.info(f"  - Total cell types: {len(summary_df)}")
+    logging.info(f"  - Total cells: {summary_df['cellcount'].sum():,}")
+    logging.info(f"  - File: {excel_path}")
+
+
 def save_run_metadata(output_dir: Path, run_parameters: dict) -> None:
     """
     Save run metadata and parameters to JSON file.
@@ -1085,6 +1139,16 @@ def annotate_spatial_data(
     logging.info(f"Adding predictions as column: {prediction_column}")
     sdata.tables[table_name].obs[prediction_column] = predictions['predicted_labels']
     sdata.tables[table_name].obs[prediction_column] = sdata.tables[table_name].obs[prediction_column].astype('category')
+
+    # Export cell type summary to Excel
+    export_celltype_summary_to_excel(
+        sdata=sdata,
+        output_dir=output_dir,
+        xenium_path=xenium_path,
+        reference_path=reference_path,
+        table_name=table_name,
+        prediction_column=prediction_column
+    )
 
     # Parse attach_to parameter and attach table to regions
     logging.info("Attaching table annotations to spatial regions")
