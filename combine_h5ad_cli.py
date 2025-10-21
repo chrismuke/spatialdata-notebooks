@@ -6,17 +6,19 @@ This tool combines two or more h5ad single-cell RNA-seq files into a single data
 Handles duplicate cells, gene harmonization, and cell type conflict resolution.
 """
 
+import io
 import logging
+import shlex
+import subprocess
 import sys
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
 import random
 
 import anndata as ad
 import click
 import numpy as np
-import pandas as pd
 from collections import Counter
 
 
@@ -140,6 +142,71 @@ def analyze_cell_type_conflicts(
             }
 
     return conflict_details, num_conflicts, num_resolved
+
+
+def run_git_command(args: List[str]) -> str | None:
+    """Run a git command and return its stripped stdout, or None if it fails."""
+    try:
+        result = subprocess.run(
+            ["git", *args],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        return result.stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+
+
+def get_git_metadata() -> Dict[str, str]:
+    """Collect git metadata to describe repository state for reproducibility."""
+    commit = run_git_command(["rev-parse", "HEAD"]) or "unknown"
+    describe = run_git_command(["describe", "--tags", "--always", "--dirty"]) or "unknown"
+    branch = run_git_command(["rev-parse", "--abbrev-ref", "HEAD"]) or "unknown"
+    status = run_git_command(["status", "--short", "--branch"]) or ""
+    toplevel = run_git_command(["rev-parse", "--show-toplevel"]) or ""
+    dirty_flag = "true" if run_git_command(["status", "--porcelain"]) else "false"
+    remote = run_git_command(["remote", "get-url", "origin"]) or ""
+
+    return {
+        "commit": commit,
+        "describe": describe,
+        "branch": branch,
+        "status": status,
+        "toplevel": toplevel,
+        "is_dirty": dirty_flag,
+        "remote": remote
+    }
+
+
+def write_provenance_file(
+    output_path: Path,
+    command_line: str,
+    git_info: Dict[str, str],
+    cli_output: str
+) -> Path:
+    """Write companion provenance file capturing command invocation, git metadata, and CLI output."""
+    provenance_path = output_path.with_suffix(".txt")
+    status_lines = git_info.get("status", "").splitlines()
+    status_block = "\n".join(f"  {line}" for line in status_lines) if status_lines else "  <none>"
+    cli_output = cli_output.rstrip("\n")
+    provenance_path.write_text(
+        "command:\n"
+        f"  {command_line}\n"
+        "git_repository:\n"
+        f"  path: {git_info.get('toplevel', '') or '<unknown>'}\n"
+        f"  branch: {git_info.get('branch', 'unknown')}\n"
+        f"  commit: {git_info.get('commit', 'unknown')}\n"
+        f"  describe: {git_info.get('describe', 'unknown')}\n"
+        f"  remote_origin: {git_info.get('remote', '') or '<none>'}\n"
+        f"  is_dirty: {git_info.get('is_dirty', 'unknown')}\n"
+        "git_status:\n"
+        f"{status_block}\n"
+        "cli_output:\n"
+        f"{cli_output}\n",
+        encoding="utf-8"
+    )
+    return provenance_path
 
 
 def combine_h5ad_files(
@@ -311,10 +378,8 @@ def combine_h5ad_files(
     logging.info(f"\nCell type distribution:")
 
     ct_counts = combined.obs['cell_type'].value_counts()
-    for ct, count in ct_counts.head(10).items():
+    for ct, count in ct_counts.items():
         logging.info(f"    {ct:40s}: {count:6,} cells")
-    if len(ct_counts) > 10:
-        logging.info(f"    ... and {len(ct_counts) - 10} more cell types")
 
     # Save
     logging.info(f"\nSaving combined dataset to: {output_path}")
@@ -377,12 +442,23 @@ def main(
 
         # Use specific cell type column
         uv run python combine_h5ad_cli.py file1.h5ad file2.h5ad combined.h5ad --cell-type-column celltype
+
+    A provenance text file is written alongside the output containing the full command,
+    captured log output, and repository state for reproducibility.
     """
     setup_logging(log_level)
 
     if len(input_files) < 2:
         click.echo("Error: At least 2 input files required", err=True)
         sys.exit(1)
+
+    command_line = shlex.join(sys.argv)
+    git_info = get_git_metadata()
+    capture_stream = io.StringIO()
+    capture_handler = logging.StreamHandler(capture_stream)
+    capture_handler.setFormatter(logging.Formatter("%(message)s"))
+    root_logger = logging.getLogger()
+    root_logger.addHandler(capture_handler)
 
     try:
         combine_h5ad_files(
@@ -392,11 +468,20 @@ def main(
             cell_type_column=cell_type_column,
             overwrite=overwrite
         )
+        log_contents = capture_stream.getvalue()
+        provenance_path = write_provenance_file(output_file, command_line, git_info, log_contents)
+        logging.info(f"Provenance written to: {provenance_path}")
+        updated_log_contents = capture_stream.getvalue()
+        if updated_log_contents != log_contents:
+            write_provenance_file(output_file, command_line, git_info, updated_log_contents)
     except Exception as e:
         click.echo(f"❌ Error: {e}", err=True)
         if log_level == "DEBUG":
             raise
         sys.exit(1)
+    finally:
+        root_logger.removeHandler(capture_handler)
+        capture_handler.close()
 
 
 if __name__ == "__main__":
