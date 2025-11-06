@@ -2,7 +2,7 @@
     "metadata": {
         ".zattrs": {
             "spatialdata_attrs": {
-                "spatialdata_software_version": "0.4.1.dev6+g872f8c2.d20250616",
+                "spatialdata_software_version": "0.4.1rc0",
                 "version": "0.1"
             }
         },
@@ -1308,6 +1308,21 @@
         },
         "tables/table/obsp/.zgroup": {
             "zarr_format": 2
+        },
+        "tables/table/raw/.zarray": {
+            "chunks": [],
+            "compressor": null,
+            "dimension_separator": "/",
+            "dtype": "<f8",
+            "fill_value": 0.0,
+            "filters": null,
+            "order": "C",
+            "shape": [],
+            "zarr_format": 2
+        },
+        "tables/table/raw/.zattrs": {
+            "encoding-type": "null",
+            "encoding-version": "0.1.0"
         },
         "tables/table/uns/.zattrs": {
             "encoding-type": "dict",
