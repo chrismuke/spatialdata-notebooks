@@ -1,0 +1,737 @@
+Starting parallel cell type annotation for 128 combinations...
+Using 8 parallel workers
+Results will be stored in: /media/chrism/Share1TB/10x_xenium_mouse_datasets/results
+
+[Job 2] Starting: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 2] ✓ Completed: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 9] Starting: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 9] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 19] Starting: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 19] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 28] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 28] ✗ Failed: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 28] Error: Loading Xenium data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/zarr_xenosplit/Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0000603682463023, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000362231345085, 4.000165439655886], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.00072446269017, 8.000992720052945], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.005314009661834, 16.00198544010589], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 33131, 48358)
+ - chunks =  ['1', '4096 (+ 363)', '4096 (+ 3302)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 16565, 24179)
+ - chunks =  ['1', '4096 (+ 181)', '4096 (+ 3699)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 8282, 12089)
+ - chunks =  ['1', '4096 (+ 90)', '4096 (+ 3897)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 4141, 6044)
+ - chunks =  ['1', '4096 (+ 45)', '4096 (+ 1948)']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 2070, 3022)
+ - chunks =  ['1', '2070', '3022']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0000603682463023, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000362231345085, 4.000165439655886], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.00072446269017, 8.000992720052945], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.005314009661834, 16.00198544010589], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 33131, 48358)
+ - chunks =  ['1', '4096 (+ 363)', '4096 (+ 3302)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 16565, 24179)
+ - chunks =  ['1', '4096 (+ 181)', '4096 (+ 3699)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 8282, 12089)
+ - chunks =  ['1', '4096 (+ 90)', '4096 (+ 3897)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 4141, 6044)
+ - chunks =  ['1', '4096 (+ 45)', '4096 (+ 1948)']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 2070, 3022)
+ - chunks =  ['1', '2070', '3022']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+Loading reference data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/xenium_ref/40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+Xenium data: 162033 cells, 248 genes
+Reference data: 4992 cells, 32101 genes
+Harmonizing gene names between datasets...
+Found 248 common genes after standardizing IDs
+Final common genes: 248
+Normalizing data to 10000.0 counts per cell
+Normalizing data to 10000.0 counts per cell
+Training CellTypist model using label column: cell_type
+🍳 Preparing data before training
+❌ Error during annotation: 🛑 Invalid expression matrix, expect log1p normalized expression to 10000 counts per cell
+
+[Job 30] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 30] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 40] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 40] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 51] Starting: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 51] ✓ Completed: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 55] Starting: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 55] ✓ Completed: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 59] Starting: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 59] ✓ Completed: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 63] Starting: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 63] ✓ Completed: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 71] Starting: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 71] ✓ Completed: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 79] Starting: Xenium_V1_FFPE_wildtype_13_4_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 79] ✓ Completed: Xenium_V1_FFPE_wildtype_13_4_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 86] Starting: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 86] ✓ Completed: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 93] Starting: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 93] ✓ Completed: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 102] Starting: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 102] ✓ Completed: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 109] Starting: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 109] ✓ Completed: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 118] Starting: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 118] ✓ Completed: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 126] Starting: Xenium_V1_mouse_Colon_FF.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 126] ✓ Completed: Xenium_V1_mouse_Colon_FF.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 3] Starting: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 3] ✓ Completed: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 13] Starting: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 13] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 24] Starting: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 24] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 33] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 33] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 36] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 36] ✗ Failed: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 36] Error: Loading Xenium data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/zarr_xenosplit/Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.000060350030175, 2.0000413633355394], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.00012070006035, 4.000082726671079], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.001207146306133, 8.000165453342158], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.002414292612265, 16.000330906684315], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 33141, 48353)
+ - chunks =  ['1', '4096 (+ 373)', '4096 (+ 3297)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 16570, 24176)
+ - chunks =  ['1', '4096 (+ 186)', '4096 (+ 3696)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 8285, 12088)
+ - chunks =  ['1', '4096 (+ 93)', '4096 (+ 3896)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 4142, 6044)
+ - chunks =  ['1', '4096 (+ 46)', '4096 (+ 1948)']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 2071, 3022)
+ - chunks =  ['1', '2071', '3022']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.000060350030175, 2.0000413633355394], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.00012070006035, 4.000082726671079], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.001207146306133, 8.000165453342158], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.002414292612265, 16.000330906684315], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 33141, 48353)
+ - chunks =  ['1', '4096 (+ 373)', '4096 (+ 3297)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 16570, 24176)
+ - chunks =  ['1', '4096 (+ 186)', '4096 (+ 3696)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 8285, 12088)
+ - chunks =  ['1', '4096 (+ 93)', '4096 (+ 3896)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 4142, 6044)
+ - chunks =  ['1', '4096 (+ 46)', '4096 (+ 1948)']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 2071, 3022)
+ - chunks =  ['1', '2071', '3022']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+Loading reference data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/xenium_ref/40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+Xenium data: 154654 cells, 248 genes
+Reference data: 4992 cells, 32101 genes
+Harmonizing gene names between datasets...
+Found 248 common genes after standardizing IDs
+Final common genes: 248
+Normalizing data to 10000.0 counts per cell
+Normalizing data to 10000.0 counts per cell
+Training CellTypist model using label column: cell_type
+🍳 Preparing data before training
+❌ Error during annotation: 🛑 Invalid expression matrix, expect log1p normalized expression to 10000 counts per cell
+
+[Job 37] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 37] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 46] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 46] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 64] Starting: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 64] ✓ Completed: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 72] Starting: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 72] ✓ Completed: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 80] Starting: Xenium_V1_FFPE_wildtype_13_4_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 80] ✓ Completed: Xenium_V1_FFPE_wildtype_13_4_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 88] Starting: Xenium_V1_FFPE_wildtype_2_5_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 88] ✓ Completed: Xenium_V1_FFPE_wildtype_2_5_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 97] Starting: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 97] ✓ Completed: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 105] Starting: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 105] ✓ Completed: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 113] Starting: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 113] ✓ Completed: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 121] Starting: Xenium_V1_mouse_Colon_FF.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 121] ✓ Completed: Xenium_V1_mouse_Colon_FF.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 4] Starting: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 4] ✓ Completed: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 15] Starting: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 15] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 23] Starting: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 23] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 32] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 32] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 42] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 42] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 49] Starting: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 49] ✓ Completed: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 54] Starting: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 54] ✓ Completed: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 57] Starting: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 57] ✓ Completed: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 60] Starting: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 60] ✓ Completed: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 68] Starting: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 68] ✓ Completed: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 76] Starting: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 76] ✓ Completed: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 84] Starting: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 84] ✓ Completed: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 92] Starting: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 92] ✓ Completed: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 103] Starting: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 103] ✓ Completed: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 110] Starting: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 110] ✓ Completed: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 116] Starting: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 116] ✓ Completed: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 124] Starting: Xenium_V1_mouse_Colon_FF.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 124] ✓ Completed: Xenium_V1_mouse_Colon_FF.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 7] Starting: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 7] ✓ Completed: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 10] Starting: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 10] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 18] Starting: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 18] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 27] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 27] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 38] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 38] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 47] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 47] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 66] Starting: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 66] ✓ Completed: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 74] Starting: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 74] ✓ Completed: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 82] Starting: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 82] ✓ Completed: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 90] Starting: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 90] ✓ Completed: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 98] Starting: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 98] ✓ Completed: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 106] Starting: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 106] ✓ Completed: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 114] Starting: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 114] ✓ Completed: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 122] Starting: Xenium_V1_mouse_Colon_FF.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 122] ✓ Completed: Xenium_V1_mouse_Colon_FF.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 6] Starting: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 6] ✓ Completed: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 12] Starting: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 12] ✗ Failed: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 12] Error: Loading Xenium data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/zarr_xenosplit/Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.0, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.001922152811149, 8.0], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.01153846153846, 16.004993757802747], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 16652, 25640)
+ - chunks =  ['1', '4096 (+ 268)', '4096 (+ 1064)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 8326, 12820)
+ - chunks =  ['1', '4096 (+ 134)', '4096 (+ 532)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 4163, 6410)
+ - chunks =  ['1', '4096 (+ 67)', '4096 (+ 2314)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 2081, 3205)
+ - chunks =  ['1', '2081', '3205']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 1040, 1602)
+ - chunks =  ['1', '1040', '1602']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.0, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.001922152811149, 8.0], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.01153846153846, 16.004993757802747], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 16652, 25640)
+ - chunks =  ['1', '4096 (+ 268)', '4096 (+ 1064)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 8326, 12820)
+ - chunks =  ['1', '4096 (+ 134)', '4096 (+ 532)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 4163, 6410)
+ - chunks =  ['1', '4096 (+ 67)', '4096 (+ 2314)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 2081, 3205)
+ - chunks =  ['1', '2081', '3205']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 1040, 1602)
+ - chunks =  ['1', '1040', '1602']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+Loading reference data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/xenium_ref/40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+Xenium data: 36602 cells, 248 genes
+Reference data: 4992 cells, 32101 genes
+Harmonizing gene names between datasets...
+Found 248 common genes after standardizing IDs
+Final common genes: 248
+Normalizing data to 10000.0 counts per cell
+Normalizing data to 10000.0 counts per cell
+Training CellTypist model using label column: cell_type
+🍳 Preparing data before training
+❌ Error during annotation: 🛑 Invalid expression matrix, expect log1p normalized expression to 10000 counts per cell
+
+[Job 16] Starting: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 16] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 25] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 25] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 34] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 34] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 43] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 43] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 52] Starting: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 52] ✓ Completed: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 56] Starting: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 56] ✓ Completed: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 62] Starting: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 62] ✓ Completed: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 69] Starting: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 69] ✓ Completed: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 77] Starting: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 77] ✓ Completed: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 87] Starting: Xenium_V1_FFPE_wildtype_2_5_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 87] ✓ Completed: Xenium_V1_FFPE_wildtype_2_5_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 95] Starting: Xenium_V1_FFPE_wildtype_5_7_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 95] ✓ Completed: Xenium_V1_FFPE_wildtype_5_7_months.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 101] Starting: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 101] ✓ Completed: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 112] Starting: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 112] ✓ Completed: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 120] Starting: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 120] ✓ Completed: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 128] Starting: Xenium_V1_mouse_Colon_FF.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 128] ✓ Completed: Xenium_V1_mouse_Colon_FF.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 8] Starting: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 8] ✓ Completed: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 14] Starting: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 14] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 21] Starting: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 21] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 31] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 31] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 39] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 39] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 50] Starting: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 50] ✓ Completed: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 53] Starting: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 53] ✓ Completed: Xenium_V1_FFPE_TgCRND8_17_9_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 58] Starting: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 58] ✓ Completed: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 61] Starting: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 61] ✓ Completed: Xenium_V1_FFPE_TgCRND8_2_5_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 70] Starting: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 70] ✓ Completed: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 78] Starting: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 78] ✓ Completed: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 85] Starting: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 85] ✓ Completed: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 94] Starting: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 94] ✓ Completed: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 100] Starting: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 100] ✓ Completed: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 108] Starting: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 108] ✓ Completed: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 117] Starting: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 117] ✓ Completed: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 127] Starting: Xenium_V1_mouse_Colon_FF.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 127] ✓ Completed: Xenium_V1_mouse_Colon_FF.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 5] Starting: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 5] ✓ Completed: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 17] Starting: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 17] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 26] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 26] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 2430dcf3-40b8-43dc-8f8c-87856c035db1.h5ad
+[Job 35] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 35] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_2.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 44] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 44] ✗ Failed: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 44] Error: Loading Xenium data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/zarr_xenosplit/Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000215238915196, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.000430477830392, 8.000702740688686], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.000860955660784, 16.001405481377372], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 37170, 45540)
+ - chunks =  ['1', '4096 (+ 306)', '4096 (+ 484)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 18585, 22770)
+ - chunks =  ['1', '4096 (+ 2201)', '4096 (+ 2290)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 9292, 11385)
+ - chunks =  ['1', '4096 (+ 1100)', '4096 (+ 3193)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 4646, 5692)
+ - chunks =  ['1', '4096 (+ 550)', '4096 (+ 1596)']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 2323, 2846)
+ - chunks =  ['1', '2323', '2846']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000215238915196, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.000430477830392, 8.000702740688686], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.000860955660784, 16.001405481377372], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 37170, 45540)
+ - chunks =  ['1', '4096 (+ 306)', '4096 (+ 484)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 18585, 22770)
+ - chunks =  ['1', '4096 (+ 2201)', '4096 (+ 2290)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 9292, 11385)
+ - chunks =  ['1', '4096 (+ 1100)', '4096 (+ 3193)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 4646, 5692)
+ - chunks =  ['1', '4096 (+ 550)', '4096 (+ 1596)']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 2323, 2846)
+ - chunks =  ['1', '2323', '2846']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+Loading reference data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/xenium_ref/40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+Xenium data: 158047 cells, 248 genes
+Reference data: 4992 cells, 32101 genes
+Harmonizing gene names between datasets...
+Found 248 common genes after standardizing IDs
+Final common genes: 248
+Normalizing data to 10000.0 counts per cell
+Normalizing data to 10000.0 counts per cell
+Training CellTypist model using label column: cell_type
+🍳 Preparing data before training
+❌ Error during annotation: 🛑 Invalid expression matrix, expect log1p normalized expression to 10000 counts per cell
+
+[Job 45] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 45] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 65] Starting: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 65] ✓ Completed: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 73] Starting: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 73] ✓ Completed: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 81] Starting: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 81] ✓ Completed: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 89] Starting: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 89] ✓ Completed: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 96] Starting: Xenium_V1_FFPE_wildtype_5_7_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 96] ✓ Completed: Xenium_V1_FFPE_wildtype_5_7_months.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 104] Starting: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 104] ✓ Completed: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 111] Starting: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 111] ✓ Completed: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 119] Starting: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 119] ✓ Completed: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + fb1eabf9-1fae-4253-97c1-52ecdee0f2df.h5ad
+[Job 125] Starting: Xenium_V1_mouse_Colon_FF.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 125] ✓ Completed: Xenium_V1_mouse_Colon_FF.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 1] Starting: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 1] ✓ Completed: Xenium_Prime_Mouse_Brain_Coronal_FF.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 11] Starting: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 11] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal_Subset_CTX_HP.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 20] Starting: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 20] ✗ Failed: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+[Job 20] Error: Loading Xenium data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/zarr_xenosplit/Xenium_V1_FF_Mouse_Brain_Coronal.zarr
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.000060360958532, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000362187613184, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.001690412943733, 8.0], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.007246376811594, 16.0], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 33135, 48352)
+ - chunks =  ['1', '4096 (+ 367)', '4096 (+ 3296)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 16567, 24176)
+ - chunks =  ['1', '4096 (+ 183)', '4096 (+ 3696)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 8283, 12088)
+ - chunks =  ['1', '4096 (+ 91)', '4096 (+ 3896)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 4141, 6044)
+ - chunks =  ['1', '4096 (+ 45)', '4096 (+ 1948)']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 2070, 3022)
+ - chunks =  ['1', '2070', '3022']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+version mismatch: detected: RasterFormatV02, requested: FormatV04
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.000060360958532, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000362187613184, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.001690412943733, 8.0], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.007246376811594, 16.0], 'type': 'scale'}], 'path': '4'}]
+resolution: 0
+ - shape ('c', 'y', 'x') = (1, 33135, 48352)
+ - chunks =  ['1', '4096 (+ 367)', '4096 (+ 3296)']
+ - dtype = uint16
+resolution: 1
+ - shape ('c', 'y', 'x') = (1, 16567, 24176)
+ - chunks =  ['1', '4096 (+ 183)', '4096 (+ 3696)']
+ - dtype = uint16
+resolution: 2
+ - shape ('c', 'y', 'x') = (1, 8283, 12088)
+ - chunks =  ['1', '4096 (+ 91)', '4096 (+ 3896)']
+ - dtype = uint16
+resolution: 3
+ - shape ('c', 'y', 'x') = (1, 4141, 6044)
+ - chunks =  ['1', '4096 (+ 45)', '4096 (+ 1948)']
+ - dtype = uint16
+resolution: 4
+ - shape ('c', 'y', 'x') = (1, 2070, 3022)
+ - chunks =  ['1', '2070', '3022']
+ - dtype = uint16
+root_attr: multiscales
+root_attr: omero
+root_attr: spatialdata_attrs
+Loading reference data from: /media/chrism/Share1TB/10x_xenium_mouse_datasets/xenium_ref/40320ee1-a655-4cbd-bbca-7608d5fc4eb6.h5ad
+Xenium data: 130870 cells, 248 genes
+Reference data: 4992 cells, 32101 genes
+Harmonizing gene names between datasets...
+Found 248 common genes after standardizing IDs
+Final common genes: 248
+Normalizing data to 10000.0 counts per cell
+Normalizing data to 10000.0 counts per cell
+Training CellTypist model using label column: cell_type
+🍳 Preparing data before training
+❌ Error during annotation: 🛑 Invalid expression matrix, expect log1p normalized expression to 10000 counts per cell
+
+[Job 22] Starting: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 22] ✓ Completed: Xenium_V1_FF_Mouse_Brain_Coronal.zarr + 756ea4fa-e736-4533-878f-6e6d32339da3.h5ad
+[Job 29] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 29] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_1.zarr + 69f6ba65-d094-4ee8-96d5-b2754ff1c084.h5ad
+[Job 41] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 41] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + 0c44ac00-d0a8-4a5d-93e6-da8df2488ad2.h5ad
+[Job 48] Starting: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 48] ✓ Completed: Xenium_V1_FF_Mouse_Brain_MultiSection_3.zarr + fe173071-fdad-456a-8fb9-46442556b6b9.h5ad
+[Job 67] Starting: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 67] ✓ Completed: Xenium_V1_FFPE_TgCRND8_5_7_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 75] Starting: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 75] ✓ Completed: Xenium_V1_FFPE_wildtype_13_4_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 83] Starting: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 83] ✓ Completed: Xenium_V1_FFPE_wildtype_2_5_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 91] Starting: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 91] ✓ Completed: Xenium_V1_FFPE_wildtype_5_7_months.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 99] Starting: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 99] ✓ Completed: Xenium_V1_mFemur_EDTA_3daydecal_section.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 107] Starting: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 107] ✓ Completed: Xenium_V1_mFemur_EDTA_PFA_3daydecal_section.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 115] Starting: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 115] ✓ Completed: Xenium_V1_mFemur_formic_acid_24hrdecal_section.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 123] Starting: Xenium_V1_mouse_Colon_FF.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+[Job 123] ✓ Completed: Xenium_V1_mouse_Colon_FF.zarr + 24b8aa1f-258c-4d47-8f96-e30fa8d4aeb0.h5ad
+Progress: 1/128 completed (1 success, 0 failed)
+Progress: 2/128 completed (2 success, 0 failed)
+Progress: 3/128 completed (3 success, 0 failed)
+Progress: 4/128 completed (4 success, 0 failed)
+Progress: 5/128 completed (5 success, 0 failed)
+Progress: 6/128 completed (6 success, 0 failed)
+Progress: 7/128 completed (7 success, 0 failed)
+Progress: 8/128 completed (7 success, 1 failed)
+Progress: 9/128 completed (8 success, 1 failed)
+Progress: 10/128 completed (9 success, 1 failed)
+Progress: 11/128 completed (10 success, 1 failed)
+Progress: 12/128 completed (11 success, 1 failed)
+Progress: 13/128 completed (12 success, 1 failed)
+Progress: 14/128 completed (12 success, 2 failed)
+Progress: 15/128 completed (13 success, 2 failed)
+Progress: 16/128 completed (14 success, 2 failed)
+Progress: 17/128 completed (15 success, 2 failed)
+Progress: 18/128 completed (16 success, 2 failed)
+Progress: 19/128 completed (17 success, 2 failed)
+Progress: 20/128 completed (18 success, 2 failed)
+Progress: 21/128 completed (19 success, 2 failed)
+Progress: 22/128 completed (19 success, 3 failed)
+Progress: 23/128 completed (20 success, 3 failed)
+Progress: 24/128 completed (21 success, 3 failed)
+Progress: 25/128 completed (22 success, 3 failed)
+Progress: 26/128 completed (23 success, 3 failed)
+Progress: 27/128 completed (24 success, 3 failed)
+Progress: 28/128 completed (25 success, 3 failed)
+Progress: 29/128 completed (25 success, 4 failed)
+Progress: 30/128 completed (26 success, 4 failed)
+Progress: 31/128 completed (27 success, 4 failed)
+Progress: 32/128 completed (28 success, 4 failed)
+Progress: 33/128 completed (29 success, 4 failed)
+Progress: 34/128 completed (30 success, 4 failed)
+Progress: 35/128 completed (31 success, 4 failed)
+Progress: 36/128 completed (32 success, 4 failed)
+Progress: 37/128 completed (32 success, 5 failed)
+Progress: 38/128 completed (33 success, 5 failed)
+Progress: 39/128 completed (34 success, 5 failed)
+Progress: 40/128 completed (35 success, 5 failed)
+Progress: 41/128 completed (36 success, 5 failed)
+Progress: 42/128 completed (37 success, 5 failed)
+Progress: 43/128 completed (38 success, 5 failed)
+Progress: 44/128 completed (39 success, 5 failed)
+Progress: 45/128 completed (40 success, 5 failed)
+Progress: 46/128 completed (41 success, 5 failed)
+Progress: 47/128 completed (42 success, 5 failed)
+Progress: 48/128 completed (43 success, 5 failed)
+Progress: 49/128 completed (44 success, 5 failed)
+Progress: 50/128 completed (45 success, 5 failed)
+Progress: 51/128 completed (46 success, 5 failed)
+Progress: 52/128 completed (47 success, 5 failed)
+Progress: 53/128 completed (48 success, 5 failed)
+Progress: 54/128 completed (49 success, 5 failed)
+Progress: 55/128 completed (50 success, 5 failed)
+Progress: 56/128 completed (51 success, 5 failed)
+Progress: 57/128 completed (52 success, 5 failed)
+Progress: 58/128 completed (53 success, 5 failed)
+Progress: 59/128 completed (54 success, 5 failed)
+Progress: 60/128 completed (55 success, 5 failed)
+Progress: 61/128 completed (56 success, 5 failed)
+Progress: 62/128 completed (57 success, 5 failed)
+Progress: 63/128 completed (58 success, 5 failed)
+Progress: 64/128 completed (59 success, 5 failed)
+Progress: 65/128 completed (60 success, 5 failed)
+Progress: 66/128 completed (61 success, 5 failed)
+Progress: 67/128 completed (62 success, 5 failed)
+Progress: 68/128 completed (63 success, 5 failed)
+Progress: 69/128 completed (64 success, 5 failed)
+Progress: 70/128 completed (65 success, 5 failed)
+Progress: 71/128 completed (66 success, 5 failed)
+Progress: 72/128 completed (67 success, 5 failed)
+Progress: 73/128 completed (68 success, 5 failed)
+Progress: 74/128 completed (69 success, 5 failed)
+Progress: 75/128 completed (70 success, 5 failed)
+Progress: 76/128 completed (71 success, 5 failed)
+Progress: 77/128 completed (72 success, 5 failed)
+Progress: 78/128 completed (73 success, 5 failed)
+Progress: 79/128 completed (74 success, 5 failed)
+Progress: 80/128 completed (75 success, 5 failed)
+Progress: 81/128 completed (76 success, 5 failed)
+Progress: 82/128 completed (77 success, 5 failed)
+Progress: 83/128 completed (78 success, 5 failed)
+Progress: 84/128 completed (79 success, 5 failed)
+Progress: 85/128 completed (80 success, 5 failed)
+Progress: 86/128 completed (81 success, 5 failed)
+Progress: 87/128 completed (82 success, 5 failed)
+Progress: 88/128 completed (83 success, 5 failed)
+Progress: 89/128 completed (84 success, 5 failed)
+Progress: 90/128 completed (85 success, 5 failed)
+Progress: 91/128 completed (86 success, 5 failed)
+Progress: 92/128 completed (87 success, 5 failed)
+Progress: 93/128 completed (88 success, 5 failed)
+Progress: 94/128 completed (89 success, 5 failed)
+Progress: 95/128 completed (90 success, 5 failed)
+Progress: 96/128 completed (91 success, 5 failed)
+Progress: 97/128 completed (92 success, 5 failed)
+Progress: 98/128 completed (93 success, 5 failed)
+Progress: 99/128 completed (94 success, 5 failed)
+Progress: 100/128 completed (95 success, 5 failed)
+Progress: 101/128 completed (96 success, 5 failed)
+Progress: 102/128 completed (97 success, 5 failed)
+Progress: 103/128 completed (98 success, 5 failed)
+Progress: 104/128 completed (99 success, 5 failed)
+Progress: 105/128 completed (100 success, 5 failed)
+Progress: 106/128 completed (101 success, 5 failed)
+Progress: 107/128 completed (102 success, 5 failed)
+Progress: 108/128 completed (103 success, 5 failed)
+Progress: 109/128 completed (104 success, 5 failed)
+Progress: 110/128 completed (105 success, 5 failed)
+Progress: 111/128 completed (106 success, 5 failed)
+Progress: 112/128 completed (107 success, 5 failed)
+Progress: 113/128 completed (108 success, 5 failed)
+Progress: 114/128 completed (109 success, 5 failed)
+Progress: 115/128 completed (110 success, 5 failed)
+Progress: 116/128 completed (111 success, 5 failed)
+Progress: 117/128 completed (112 success, 5 failed)
+Progress: 118/128 completed (113 success, 5 failed)
+Progress: 119/128 completed (114 success, 5 failed)
+Progress: 120/128 completed (115 success, 5 failed)
+Progress: 121/128 completed (116 success, 5 failed)
+Progress: 122/128 completed (117 success, 5 failed)
+Progress: 123/128 completed (118 success, 5 failed)
+Progress: 124/128 completed (119 success, 5 failed)
+Progress: 125/128 completed (120 success, 5 failed)
+Progress: 126/128 completed (121 success, 5 failed)
+Progress: 127/128 completed (122 success, 5 failed)
+Progress: 128/128 completed (123 success, 5 failed)
+
+All cell type annotations completed!
+Results: 123 successful, 5 failed
+Results stored in: /media/chrism/Share1TB/10x_xenium_mouse_datasets/results

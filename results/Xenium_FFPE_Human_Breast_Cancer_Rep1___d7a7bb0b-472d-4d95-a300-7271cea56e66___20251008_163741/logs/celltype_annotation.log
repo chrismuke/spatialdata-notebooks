@@ -1,0 +1,96 @@
+2025-10-08 16:37:41 - INFO - Loading Xenium data from: /media/chrism/1TB Spatial/Datasets/10x breast cancer/Xenium_FFPE_Human_Breast_Cancer_Rep1.zarr
+2025-10-08 16:37:41 - WARNING - version mismatch: detected: RasterFormatV02, requested: FormatV04
+2025-10-08 16:37:41 - INFO - root_attr: multiscales
+2025-10-08 16:37:41 - INFO - root_attr: omero
+2025-10-08 16:37:41 - INFO - root_attr: spatialdata_attrs
+2025-10-08 16:37:41 - INFO - datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000310366232154, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.000620732464307, 8.0], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.001241464928615, 16.003615002259377], 'type': 'scale'}], 'path': '4'}]
+2025-10-08 16:37:41 - INFO - resolution: 0
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 25778, 35416)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '4096 (+ 1202)', '4096 (+ 2648)']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - resolution: 1
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 12889, 17708)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '4096 (+ 601)', '4096 (+ 1324)']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - resolution: 2
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 6444, 8854)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '4096 (+ 2348)', '4096 (+ 662)']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - resolution: 3
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 3222, 4427)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '3222', '4096 (+ 331)']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - resolution: 4
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 1611, 2213)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '1611', '2213']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - root_attr: multiscales
+2025-10-08 16:37:41 - INFO - root_attr: omero
+2025-10-08 16:37:41 - INFO - root_attr: spatialdata_attrs
+2025-10-08 16:37:41 - WARNING - version mismatch: detected: RasterFormatV02, requested: FormatV04
+2025-10-08 16:37:41 - INFO - root_attr: multiscales
+2025-10-08 16:37:41 - INFO - root_attr: omero
+2025-10-08 16:37:41 - INFO - root_attr: spatialdata_attrs
+2025-10-08 16:37:41 - INFO - datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000310366232154, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.000620732464307, 8.0], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.001241464928615, 16.003615002259377], 'type': 'scale'}], 'path': '4'}]
+2025-10-08 16:37:41 - INFO - resolution: 0
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 25778, 35416)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '4096 (+ 1202)', '4096 (+ 2648)']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - resolution: 1
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 12889, 17708)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '4096 (+ 601)', '4096 (+ 1324)']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - resolution: 2
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 6444, 8854)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '4096 (+ 2348)', '4096 (+ 662)']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - resolution: 3
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 3222, 4427)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '3222', '4096 (+ 331)']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - resolution: 4
+2025-10-08 16:37:41 - INFO -  - shape ('c', 'y', 'x') = (1, 1611, 2213)
+2025-10-08 16:37:41 - INFO -  - chunks =  ['1', '1611', '2213']
+2025-10-08 16:37:41 - INFO -  - dtype = uint16
+2025-10-08 16:37:41 - INFO - root_attr: multiscales
+2025-10-08 16:37:41 - INFO - root_attr: omero
+2025-10-08 16:37:41 - INFO - root_attr: spatialdata_attrs
+2025-10-08 16:37:41 - INFO - Loading reference data from: /media/chrism/1TB Spatial/Datasets/scrnaseq_human_skin/d7a7bb0b-472d-4d95-a300-7271cea56e66.h5ad
+2025-10-08 16:37:53 - INFO - Xenium data: 167780 cells, 313 genes
+2025-10-08 16:37:53 - INFO - Reference data: 195739 cells, 28421 genes
+2025-10-08 16:37:53 - INFO - Harmonizing gene names between datasets...
+2025-10-08 16:37:53 - INFO - Found 312 common genes after standardizing IDs
+2025-10-08 16:37:54 - INFO - Final common genes: 312
+2025-10-08 16:37:55 - INFO - Normalizing data to 10000.0 counts per cell
+2025-10-08 16:37:55 - INFO - Normalizing data to 10000.0 counts per cell
+2025-10-08 16:37:55 - INFO - Loading existing CellTypist model from: /media/chrism/1TB Spatial/Datasets/scrnaseq_human_skin/d7a7bb0b-472d-4d95-a300-7271cea56e66_cell_type_model_20251008_160238.pkl
+2025-10-08 16:37:55 - INFO - Loading CellTypist model from: /media/chrism/1TB Spatial/Datasets/scrnaseq_human_skin/d7a7bb0b-472d-4d95-a300-7271cea56e66_cell_type_model_20251008_160238.pkl
+2025-10-08 16:37:55 - INFO - Model loaded successfully
+2025-10-08 16:37:55 - INFO - Predicting cell types on spatial data
+2025-10-08 16:37:55 - INFO - 🔬 Input data has 167780 cells and 312 genes
+2025-10-08 16:37:55 - INFO - 🔗 Matching reference genes in the model
+2025-10-08 16:37:55 - INFO - 🧬 188 features used for prediction
+2025-10-08 16:37:55 - INFO - ⚖️ Scaling input data
+2025-10-08 16:37:56 - INFO - 🖋️ Predicting labels
+2025-10-08 16:37:56 - INFO - ✅ Prediction done!
+2025-10-08 16:37:56 - INFO - Adding predictions as column: cell_type_predicted
+2025-10-08 16:37:56 - INFO - Fixing spatial data metadata
+2025-10-08 16:37:56 - INFO - Saving annotated spatial data to: results/Xenium_FFPE_Human_Breast_Cancer_Rep1___d7a7bb0b-472d-4d95-a300-7271cea56e66___20251008_163741/data/Xenium_FFPE_Human_Breast_Cancer_Rep1_annotated.zarr
+2025-10-08 16:38:01 - INFO - ℹ️  Data saved with references to original locations (not self-contained)
+2025-10-08 16:38:01 - INFO -    Use --consolidate-data flag for more detailed consolidation information
+2025-10-08 16:38:01 - INFO - Generating visualizations with prefix: Xenium_FFPE_Human_Breast_Cancer_Rep1_annotated_with_scrnaseq_human_skin
+2025-10-08 16:41:06 - INFO - Final clustering: 10 clusters with resolution 0.5
+2025-10-08 16:41:06 - INFO - Creating spatial cell type map...
+2025-10-08 16:41:06 - INFO - Filtered spatial plot: showing 164,000 cells with known types (hiding 0 unknown cells)
+2025-10-08 16:41:08 - INFO - Saved spatial cell type map: results/Xenium_FFPE_Human_Breast_Cancer_Rep1___d7a7bb0b-472d-4d95-a300-7271cea56e66___20251008_163741/plots/Xenium_FFPE_Human_Breast_Cancer_Rep1_annotated_with_scrnaseq_human_skin_spatial_celltype_map.png
+2025-10-08 16:41:08 - INFO - Creating cell type distribution plot...
+2025-10-08 16:41:09 - INFO - Saved cell type distribution: results/Xenium_FFPE_Human_Breast_Cancer_Rep1___d7a7bb0b-472d-4d95-a300-7271cea56e66___20251008_163741/plots/Xenium_FFPE_Human_Breast_Cancer_Rep1_annotated_with_scrnaseq_human_skin_celltype_distribution.png
+2025-10-08 16:41:09 - INFO - Creating UMAP plots...
+2025-10-08 16:41:10 - INFO - Saved UMAP analysis: results/Xenium_FFPE_Human_Breast_Cancer_Rep1___d7a7bb0b-472d-4d95-a300-7271cea56e66___20251008_163741/plots/Xenium_FFPE_Human_Breast_Cancer_Rep1_annotated_with_scrnaseq_human_skin_umap_analysis.png
+2025-10-08 16:41:10 - INFO - Creating spatial scatter plot with clusters...
+2025-10-08 16:41:13 - INFO - Saved spatial clusters plot: results/Xenium_FFPE_Human_Breast_Cancer_Rep1___d7a7bb0b-472d-4d95-a300-7271cea56e66___20251008_163741/plots/Xenium_FFPE_Human_Breast_Cancer_Rep1_annotated_with_scrnaseq_human_skin_spatial_leiden_clusters.png
+2025-10-08 16:41:13 - INFO - Performing marker gene analysis...
+2025-10-08 16:41:14 - INFO - Creating marker genes plot...
+2025-10-08 16:41:15 - INFO - Saved marker genes plot: results/Xenium_FFPE_Human_Breast_Cancer_Rep1___d7a7bb0b-472d-4d95-a300-7271cea56e66___20251008_163741/plots/Xenium_FFPE_Human_Breast_Cancer_Rep1_annotated_with_scrnaseq_human_skin_marker_genes.png
+2025-10-08 16:41:15 - INFO - Run metadata saved: results/Xenium_FFPE_Human_Breast_Cancer_Rep1___d7a7bb0b-472d-4d95-a300-7271cea56e66___20251008_163741/run_metadata.json
+2025-10-08 16:41:15 - INFO - HTML report generated: results/Xenium_FFPE_Human_Breast_Cancer_Rep1___d7a7bb0b-472d-4d95-a300-7271cea56e66___20251008_163741/annotation_report.html

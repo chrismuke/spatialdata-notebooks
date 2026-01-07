@@ -6,6 +6,7 @@ This tool combines two or more h5ad single-cell RNA-seq files into a single data
 Handles duplicate cells, gene harmonization, and cell type conflict resolution.
 """
 
+import gc
 import io
 import logging
 import shlex
@@ -19,15 +20,44 @@ import random
 import anndata as ad
 import click
 import numpy as np
+import psutil
 from collections import Counter
 
 
-def setup_logging(level: str = "INFO") -> None:
-    """Setup logging configuration."""
+def get_memory_usage() -> Dict[str, float]:
+    """Get current memory usage in MB."""
+    process = psutil.Process()
+    mem_info = process.memory_info()
+    return {
+        'rss_mb': mem_info.rss / 1024 / 1024,  # Resident Set Size
+        'vms_mb': mem_info.vms / 1024 / 1024,  # Virtual Memory Size
+        'percent': process.memory_percent()
+    }
+
+
+def log_memory(prefix: str = "") -> None:
+    """Log current memory usage."""
+    mem = get_memory_usage()
+    msg = f"Memory: RSS={mem['rss_mb']:.1f}MB, VMS={mem['vms_mb']:.1f}MB, {mem['percent']:.1f}%"
+    if prefix:
+        msg = f"{prefix} - {msg}"
+    logging.info(msg)
+
+
+def setup_logging(level: str = "INFO", log_file: Path = None) -> None:
+    """Setup logging configuration with optional file output."""
+    handlers = [logging.StreamHandler()]
+
+    if log_file:
+        file_handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
+        file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        handlers.append(file_handler)
+
     logging.basicConfig(
         level=getattr(logging, level.upper()),
         format="%(message)s",
-        handlers=[logging.StreamHandler()]
+        handlers=handlers,
+        force=True  # Override any existing config
     )
 
 
@@ -60,17 +90,47 @@ def find_cell_type_column(adata: ad.AnnData) -> str:
     raise ValueError(f"No cell type column found in obs. Available columns: {list(adata.obs.columns)}")
 
 
+def load_metadata_only(file_path: Path) -> ad.AnnData:
+    """
+    Load only metadata (obs, var) without the expression matrix to save memory.
+
+    Args:
+        file_path: Path to h5ad file
+
+    Returns:
+        Metadata-only AnnData object (no X matrix)
+    """
+    logging.debug(f"  Loading metadata from {file_path.name}")
+    # Load with backed mode to avoid loading X into memory
+    adata = ad.read_h5ad(file_path, backed='r')
+
+    # Extract only what we need
+    obs_df = adata.obs.copy()
+    var_names = adata.var_names.copy()
+
+    # Close the backed file
+    adata.file.close()
+    del adata
+    gc.collect()
+
+    # Create a minimal AnnData with no X matrix
+    metadata_adata = ad.AnnData(obs=obs_df, var=var_names.to_frame())
+
+    return metadata_adata
+
+
 def detect_duplicates(adatas: List[ad.AnnData], file_paths: List[Path]) -> Dict[str, List[int]]:
     """
     Detect duplicate cell IDs across multiple datasets.
 
     Args:
-        adatas: List of AnnData objects
+        adatas: List of AnnData objects (can be metadata-only)
         file_paths: List of file paths for reporting
 
     Returns:
         Dictionary mapping cell IDs to list of file indices where they appear
     """
+    logging.debug("Scanning for duplicate cell IDs...")
     cell_to_files = {}
 
     for i, adata in enumerate(adatas):
@@ -83,6 +143,7 @@ def detect_duplicates(adatas: List[ad.AnnData], file_paths: List[Path]) -> Dict[
     duplicates = {cell_id: file_indices for cell_id, file_indices in cell_to_files.items()
                   if len(file_indices) > 1}
 
+    logging.debug(f"Found {len(duplicates)} duplicate cell IDs")
     return duplicates
 
 
@@ -217,7 +278,11 @@ def combine_h5ad_files(
     overwrite: bool = False
 ) -> None:
     """
-    Combine multiple h5ad files into a single dataset.
+    Combine multiple h5ad files into a single dataset with memory optimization.
+
+    Uses a two-pass approach:
+    1. First pass: Load metadata only to detect duplicates and find common genes
+    2. Second pass: Load and process full data one file at a time
 
     Args:
         file_paths: List of paths to h5ad files to combine
@@ -229,37 +294,43 @@ def combine_h5ad_files(
     if output_path.exists() and not overwrite:
         raise FileExistsError(f"Output file exists: {output_path}. Use --overwrite to replace.")
 
-    # Load all files
-    logging.info(f"Loading {len(file_paths)} h5ad files...")
-    adatas = []
+    log_memory("Starting combination")
+
+    # ====== FIRST PASS: Load metadata only ======
+    logging.info(f"Pass 1: Loading metadata from {len(file_paths)} h5ad files...")
+    log_memory("Before metadata loading")
+
+    metadata_adatas = []
     cell_type_columns = []
 
     for i, fpath in enumerate(file_paths, 1):
         logging.info(f"  [{i}/{len(file_paths)}] {fpath.name}")
-        adata = ad.read_h5ad(fpath)
+        metadata_adata = load_metadata_only(fpath)
 
         # Find or verify cell type column
         if cell_type_column:
-            if cell_type_column not in adata.obs.columns:
+            if cell_type_column not in metadata_adata.obs.columns:
                 raise ValueError(f"Column '{cell_type_column}' not found in {fpath.name}")
             ct_col = cell_type_column
         else:
-            ct_col = find_cell_type_column(adata)
+            ct_col = find_cell_type_column(metadata_adata)
 
         cell_type_columns.append(ct_col)
-        logging.info(f"      {adata.n_obs:,} cells x {adata.n_vars:,} genes (cell_type column: '{ct_col}')")
-        adatas.append(adata)
+        logging.info(f"      {metadata_adata.n_obs:,} cells x {metadata_adata.n_vars:,} genes (cell_type column: '{ct_col}')")
+        metadata_adatas.append(metadata_adata)
 
-    # Detect duplicates
+    log_memory("After metadata loading")
+
+    # Detect duplicates using metadata only
     logging.info("\nAnalyzing duplicate cells...")
-    duplicates = detect_duplicates(adatas, file_paths)
+    duplicates = detect_duplicates(metadata_adatas, file_paths)
 
     if duplicates:
         logging.info(f"  Found {len(duplicates):,} duplicate cell IDs")
 
         # Analyze conflicts
         conflict_details, num_conflicts, num_resolved = analyze_cell_type_conflicts(
-            duplicates, adatas, cell_type_columns
+            duplicates, metadata_adatas, cell_type_columns
         )
 
         if num_conflicts > 0:
@@ -280,85 +351,118 @@ def combine_h5ad_files(
         logging.info("  No duplicate cell IDs found")
         conflict_details = {}
 
-    # Find common genes
+    log_memory("After duplicate analysis")
+
+    # Find common genes using metadata
     logging.info("\nHarmonizing genes...")
-    all_genes = [set(adata.var_names) for adata in adatas]
+    all_genes = [set(adata.var_names) for adata in metadata_adatas]
     common_genes = set.intersection(*all_genes)
     logging.info(f"  Common genes across all files: {len(common_genes):,}")
 
     # Report unique genes per file
-    for i, (adata, fpath) in enumerate(zip(adatas, file_paths)):
+    for i, (adata, fpath) in enumerate(zip(metadata_adatas, file_paths)):
         unique_genes = set(adata.var_names) - common_genes
         if unique_genes:
             logging.info(f"  {fpath.name}: {len(unique_genes):,} unique genes (will be excluded)")
 
-    # Subset to common genes
     common_genes_sorted = sorted(common_genes)
-    adatas_subset = [adata[:, common_genes_sorted].copy() for adata in adatas]
 
-    # Standardize cell type column name
-    logging.info("\nStandardizing cell type annotations...")
-    for i, adata in enumerate(adatas_subset):
-        if cell_type_columns[i] != 'cell_type':
-            adata.obs['cell_type'] = adata.obs[cell_type_columns[i]]
+    # Prepare conflict resolution data
+    cells_to_remove = set()
+    cells_to_update = {}
 
-    # Add source file information
-    for i, (adata, fpath) in enumerate(zip(adatas_subset, file_paths)):
-        adata.obs['source_file'] = fpath.stem
-        adata.obs['source_index'] = i
-
-    # Handle duplicates and conflicts
     if duplicates:
-        logging.info("\nResolving duplicates...")
-        cells_to_remove = set()
-        cells_to_update = {}
-
+        logging.info("\nPreparing duplicate resolution...")
         for cell_id, file_indices in duplicates.items():
             if cell_id in conflict_details:
-                # Has conflict
                 if exclude_conflicts:
-                    # Remove from all datasets
                     cells_to_remove.add(cell_id)
                 else:
-                    # Update to resolved type
                     resolved_type = conflict_details[cell_id]['resolved_type']
                     cells_to_update[cell_id] = resolved_type
 
-        # Apply removals
         if exclude_conflicts and cells_to_remove:
-            logging.info(f"  Excluding {len(cells_to_remove):,} cells with conflicts")
-            for adata in adatas_subset:
-                mask = ~adata.obs_names.isin(cells_to_remove)
-                adata._inplace_subset_obs(mask)
-
-        # Apply updates
+            logging.info(f"  Will exclude {len(cells_to_remove):,} cells with conflicts")
         if cells_to_update:
-            logging.info(f"  Updating cell types for {len(cells_to_update):,} conflict cells")
-            for adata in adatas_subset:
-                for cell_id, resolved_type in cells_to_update.items():
-                    if cell_id in adata.obs_names:
-                        adata.obs.loc[cell_id, 'cell_type'] = resolved_type
+            logging.info(f"  Will update cell types for {len(cells_to_update):,} conflict cells")
 
-        # Remove duplicate cells (keep first occurrence)
-        logging.info("  Removing duplicate entries (keeping first occurrence)")
-        cells_seen = set()
-        for i, adata in enumerate(adatas_subset):
-            mask = []
-            for cell_id in adata.obs_names:
-                if cell_id not in cells_seen:
-                    cells_seen.add(cell_id)
-                    mask.append(True)
-                else:
-                    mask.append(False)
-            mask = np.array(mask)
-            removed = (~mask).sum()
-            if removed > 0:
-                logging.info(f"    File {i+1}: Removed {removed:,} duplicate cells")
-            adatas_subset[i] = adata[mask].copy()
+    # Free metadata memory
+    del metadata_adatas
+    gc.collect()
+    log_memory("After freeing metadata")
 
-    # Concatenate
+    # ====== SECOND PASS: Load and process files incrementally ======
+    logging.info(f"\nPass 2: Loading and processing full data...")
+    cells_seen = set()
+    processed_adatas = []
+
+    for i, fpath in enumerate(file_paths):
+        logging.info(f"  [{i+1}/{len(file_paths)}] Processing {fpath.name}")
+        log_memory(f"  Before loading file {i+1}")
+
+        # Load full data
+        adata = ad.read_h5ad(fpath)
+        logging.debug(f"    Loaded: {adata.n_obs:,} cells x {adata.n_vars:,} genes")
+
+        # Subset to common genes
+        adata = adata[:, common_genes_sorted].copy()
+        logging.debug(f"    After gene subsetting: {adata.n_obs:,} cells x {adata.n_vars:,} genes")
+
+        # Standardize cell type column name
+        if cell_type_columns[i] != 'cell_type':
+            adata.obs['cell_type'] = adata.obs[cell_type_columns[i]]
+
+        # Convert categorical cell_type to string to allow updates
+        if adata.obs['cell_type'].dtype.name == 'category':
+            logging.debug(f"    Converting categorical cell_type to string")
+            adata.obs['cell_type'] = adata.obs['cell_type'].astype(str)
+
+        # Add source information
+        adata.obs['source_file'] = fpath.stem
+        adata.obs['source_index'] = i
+
+        # Apply conflict resolutions
+        if cells_to_update:
+            for cell_id, resolved_type in cells_to_update.items():
+                if cell_id in adata.obs_names:
+                    adata.obs.loc[cell_id, 'cell_type'] = resolved_type
+
+        # Remove conflict cells if needed
+        if cells_to_remove:
+            mask = ~adata.obs_names.isin(cells_to_remove)
+            adata = adata[mask].copy()
+            logging.debug(f"    After removing conflicts: {adata.n_obs:,} cells")
+
+        # Remove duplicates (keep first occurrence)
+        mask = []
+        removed = 0
+        for cell_id in adata.obs_names:
+            if cell_id not in cells_seen:
+                cells_seen.add(cell_id)
+                mask.append(True)
+            else:
+                mask.append(False)
+                removed += 1
+
+        if removed > 0:
+            logging.info(f"    Removed {removed:,} duplicate cells (keeping first occurrence)")
+            adata = adata[np.array(mask)].copy()
+
+        logging.debug(f"    Final: {adata.n_obs:,} cells x {adata.n_vars:,} genes")
+        processed_adatas.append(adata)
+        log_memory(f"  After processing file {i+1}")
+
+    log_memory("Before concatenation")
+
+    # Concatenate processed datasets
     logging.info("\nCombining datasets...")
-    combined = ad.concat(adatas_subset, join='inner', index_unique=None)
+    combined = ad.concat(processed_adatas, join='inner', index_unique=None)
+    logging.info(f"  Concatenation complete: {combined.n_obs:,} cells x {combined.n_vars:,} genes")
+
+    # Free processed datasets memory
+    del processed_adatas
+    gc.collect()
+    log_memory("After concatenation")
 
     # Add metadata
     combined.uns['combine_metadata'] = {
@@ -381,10 +485,16 @@ def combine_h5ad_files(
     for ct, count in ct_counts.items():
         logging.info(f"    {ct:40s}: {count:6,} cells")
 
+    log_memory("Before saving")
+
     # Save
     logging.info(f"\nSaving combined dataset to: {output_path}")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     combined.write_h5ad(output_path)
     logging.info("✅ Done!")
+
+    log_memory("After saving")
+    logging.info(f"\nOutput file size: {output_path.stat().st_size / 1024 / 1024:.1f} MB")
 
 
 @click.command()
@@ -421,12 +531,13 @@ def main(
     log_level: str
 ):
     """
-    Combine multiple h5ad single-cell RNA-seq files.
+    Combine multiple h5ad single-cell RNA-seq files with memory optimization.
 
     Handles duplicate cells and cell type conflicts:
     - Detects duplicate cell IDs across files
     - Resolves cell type conflicts by majority vote
     - For ties, selects randomly or excludes based on --exclude-conflicts
+    - Uses two-pass approach to minimize memory usage
 
     \b
     INPUT_FILES: Two or more h5ad files to combine
@@ -443,10 +554,24 @@ def main(
         # Use specific cell type column
         uv run python combine_h5ad_cli.py file1.h5ad file2.h5ad combined.h5ad --cell-type-column celltype
 
-    A provenance text file is written alongside the output containing the full command,
-    captured log output, and repository state for reproducibility.
+    A log file (.log) and provenance text file (.txt) are written alongside the output
+    containing memory usage, full command, captured log output, and repository state
+    for reproducibility.
     """
-    setup_logging(log_level)
+    # Create log file with same name as output but .log extension
+    log_file = output_file.with_suffix('.log')
+    setup_logging(log_level, log_file)
+
+    logging.info("="*80)
+    logging.info("Combine H5AD Files - Memory Optimized Version")
+    logging.info("="*80)
+    logging.info(f"Log file: {log_file}")
+    logging.info(f"Log level: {log_level}")
+    logging.info(f"Input files: {len(input_files)}")
+    for i, f in enumerate(input_files, 1):
+        logging.info(f"  [{i}] {f}")
+    logging.info(f"Output file: {output_file}")
+    logging.info("="*80)
 
     if len(input_files) < 2:
         click.echo("Error: At least 2 input files required", err=True)

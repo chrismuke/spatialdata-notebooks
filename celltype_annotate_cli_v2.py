@@ -183,10 +183,61 @@ def harmonize_gene_names(adata_xenium: anndata.AnnData, adata_ref: anndata.AnnDa
 
 
 def normalize_data(adata: anndata.AnnData, target_sum: float = 1e4) -> None:
-    """Normalize and log-transform expression data."""
+    """Normalize and log-transform expression data for CellTypist.
+
+    Checks if data is already log-normalized and undoes it first if needed.
+    CellTypist requires log1p normalized expression to 10000 counts per cell.
+    """
+    # Check if data appears to be already log-normalized
+    # Use 99th percentile instead of max to avoid outliers
+    if hasattr(adata.X, 'toarray'):
+        # For sparse matrix, sample to check
+        sample_size = min(1000, adata.n_obs)
+        sample_data = adata.X[:sample_size].toarray()
+        nonzero = sample_data[sample_data > 0]
+        if len(nonzero) > 0:
+            percentile_99 = np.percentile(nonzero, 99)
+            percentile_999 = np.percentile(nonzero, 99.9)
+        else:
+            percentile_99 = adata.X.max()
+            percentile_999 = adata.X.max()
+    else:
+        nonzero = adata.X[adata.X > 0]
+        percentile_99 = np.percentile(nonzero, 99)
+        percentile_999 = np.percentile(nonzero, 99.9)
+
+    max_val = adata.X.max()
+    logging.info(f"Data check - 99th percentile: {percentile_99:.2f}, 99.9th: {percentile_999:.2f}, max: {max_val:.2f}")
+
+    if percentile_99 < 15:  # Likely already log-normalized
+        logging.info(f"Data appears to be already log-normalized (99th percentile: {percentile_99:.2f})")
+        logging.info("Undoing log transformation before re-normalizing for CellTypist...")
+
+        # Convert sparse to dense if needed
+        if hasattr(adata.X, 'toarray'):
+            adata.X = adata.X.toarray()
+
+        # Clip extreme outliers before undoing log transformation to avoid inf/nan
+        # Values > 20 in log space would be e^20 ≈ 485 million, which is unrealistic
+        if max_val > 20:
+            logging.warning(f"Found extreme outliers (max: {max_val:.2f}). Clipping to prevent numerical overflow...")
+            adata.X = np.clip(adata.X, None, 20)  # Clip values to max of 20
+            logging.info(f"After clipping, max value: {adata.X.max():.2f}")
+
+        # Undo log1p transformation: exp(x) - 1
+        adata.X = np.expm1(adata.X)
+
+        # Check for inf/nan and handle
+        if np.any(np.isinf(adata.X)) or np.any(np.isnan(adata.X)):
+            logging.warning("Found inf/nan values after exp transformation. Replacing with 0...")
+            adata.X = np.nan_to_num(adata.X, nan=0.0, posinf=0.0, neginf=0.0)
+
+        logging.info(f"Log transformation undone. New max value: {adata.X.max():.2f}")
+
     logging.info(f"Normalizing data to {target_sum} counts per cell")
     sc.pp.normalize_total(adata, target_sum=target_sum)
     sc.pp.log1p(adata)
+    logging.info(f"Normalization complete. Final max value: {adata.X.max():.2f}")
 
 
 def create_model_save_path(reference_path: Path, label_column: str = "cell_type") -> Path:

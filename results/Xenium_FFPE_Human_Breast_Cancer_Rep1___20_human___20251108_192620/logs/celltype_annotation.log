@@ -1,0 +1,68 @@
+2025-11-08 19:26:20 - INFO - Loading Xenium data from: /media/chrism/1TB Spatial/Datasets/10x breast cancer/Xenium_FFPE_Human_Breast_Cancer_Rep1.zarr
+2025-11-08 19:26:20 - WARNING - version mismatch: detected: RasterFormatV02, requested: FormatV04
+2025-11-08 19:26:20 - INFO - root_attr: multiscales
+2025-11-08 19:26:20 - INFO - root_attr: omero
+2025-11-08 19:26:20 - INFO - root_attr: spatialdata_attrs
+2025-11-08 19:26:20 - INFO - datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000310366232154, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.000620732464307, 8.0], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.001241464928615, 16.003615002259377], 'type': 'scale'}], 'path': '4'}]
+2025-11-08 19:26:20 - INFO - resolution: 0
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 25778, 35416)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '4096 (+ 1202)', '4096 (+ 2648)']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - resolution: 1
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 12889, 17708)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '4096 (+ 601)', '4096 (+ 1324)']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - resolution: 2
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 6444, 8854)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '4096 (+ 2348)', '4096 (+ 662)']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - resolution: 3
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 3222, 4427)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '3222', '4096 (+ 331)']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - resolution: 4
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 1611, 2213)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '1611', '2213']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - root_attr: multiscales
+2025-11-08 19:26:20 - INFO - root_attr: omero
+2025-11-08 19:26:20 - INFO - root_attr: spatialdata_attrs
+2025-11-08 19:26:20 - WARNING - version mismatch: detected: RasterFormatV02, requested: FormatV04
+2025-11-08 19:26:20 - INFO - root_attr: multiscales
+2025-11-08 19:26:20 - INFO - root_attr: omero
+2025-11-08 19:26:20 - INFO - root_attr: spatialdata_attrs
+2025-11-08 19:26:20 - INFO - datasets [{'coordinateTransformations': [{'scale': [1.0, 1.0, 1.0], 'type': 'scale'}], 'path': '0'}, {'coordinateTransformations': [{'scale': [1.0, 2.0, 2.0], 'type': 'scale'}], 'path': '1'}, {'coordinateTransformations': [{'scale': [1.0, 4.000310366232154, 4.0], 'type': 'scale'}], 'path': '2'}, {'coordinateTransformations': [{'scale': [1.0, 8.000620732464307, 8.0], 'type': 'scale'}], 'path': '3'}, {'coordinateTransformations': [{'scale': [1.0, 16.001241464928615, 16.003615002259377], 'type': 'scale'}], 'path': '4'}]
+2025-11-08 19:26:20 - INFO - resolution: 0
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 25778, 35416)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '4096 (+ 1202)', '4096 (+ 2648)']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - resolution: 1
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 12889, 17708)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '4096 (+ 601)', '4096 (+ 1324)']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - resolution: 2
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 6444, 8854)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '4096 (+ 2348)', '4096 (+ 662)']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - resolution: 3
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 3222, 4427)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '3222', '4096 (+ 331)']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - resolution: 4
+2025-11-08 19:26:20 - INFO -  - shape ('c', 'y', 'x') = (1, 1611, 2213)
+2025-11-08 19:26:20 - INFO -  - chunks =  ['1', '1611', '2213']
+2025-11-08 19:26:20 - INFO -  - dtype = uint16
+2025-11-08 19:26:20 - INFO - root_attr: multiscales
+2025-11-08 19:26:20 - INFO - root_attr: omero
+2025-11-08 19:26:20 - INFO - root_attr: spatialdata_attrs
+2025-11-08 19:26:21 - INFO - Loading reference data from: /home/chrism/20_human.h5ad
+2025-11-08 19:26:50 - INFO - Xenium data: 167780 cells, 313 genes
+2025-11-08 19:26:50 - INFO - Reference data: 2018656 cells, 8983 genes
+2025-11-08 19:26:50 - INFO - Harmonizing gene names between datasets...
+2025-11-08 19:26:52 - INFO - Found 120 common genes after standardizing IDs
+2025-11-08 19:27:24 - INFO - Final common genes: 120
+2025-11-08 19:27:28 - INFO - Normalizing data to 10000.0 counts per cell
+2025-11-08 19:27:28 - INFO - Normalizing data to 10000.0 counts per cell
+2025-11-08 19:27:28 - INFO - Training new CellTypist model and saving to: /home/chrism/20_human_cell_type_model_20251108_192728.pkl
+2025-11-08 19:27:28 - INFO - Training CellTypist model using label column: cell_type
+2025-11-08 19:27:28 - INFO - 🍳 Preparing data before training

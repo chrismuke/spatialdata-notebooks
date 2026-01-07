@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-10-08T16:41:15.262666",
+  "parameters": {
+    "Xenium Data": "/media/chrism/1TB Spatial/Datasets/10x breast cancer/Xenium_FFPE_Human_Breast_Cancer_Rep1.zarr",
+    "Reference Data": "/media/chrism/1TB Spatial/Datasets/scrnaseq_human_skin/d7a7bb0b-472d-4d95-a300-7271cea56e66.h5ad",
+    "Label Column": "cell_type",
+    "Target Sum": 10000.0,
+    "Table Name": "table",
+    "Prediction Column": "cell_type_predicted",
+    "Feature Selection": false,
+    "Min Common Genes": 50,
+    "Min Clusters": "Not specified",
+    "Max Clusters": "Not specified",
+    "Generate Plots": true,
+    "Save Annotated Zarr": true,
+    "Load Model": "/media/chrism/1TB Spatial/Datasets/scrnaseq_human_skin/d7a7bb0b-472d-4d95-a300-7271cea56e66_cell_type_model_20251008_160238.pkl"
+  },
+  "tool_version": "2.0.0",
+  "command": "./celltype_annotate_cli_v2.py --save-annotated-zarr /media/chrism/1TB Spatial/Datasets/10x breast cancer/Xenium_FFPE_Human_Breast_Cancer_Rep1.zarr /media/chrism/1TB Spatial/Datasets/scrnaseq_human_skin/d7a7bb0b-472d-4d95-a300-7271cea56e66.h5ad --load-model /media/chrism/1TB Spatial/Datasets/scrnaseq_human_skin/d7a7bb0b-472d-4d95-a300-7271cea56e66_cell_type_model_20251008_160238.pkl"
+}

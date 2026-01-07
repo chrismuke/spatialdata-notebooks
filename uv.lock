@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.12' and sys_platform == 'darwin'",
@@ -5303,6 +5303,7 @@ dependencies = [
     { name = "napari-spatialdata", extra = ["all"] },
     { name = "notebook" },
     { name = "openpyxl" },
+    { name = "psutil" },
     { name = "scanpy" },
     { name = "sopa" },
     { name = "spatialdata", extra = ["extra", "torch"] },
@@ -5328,6 +5329,9 @@ doc = [
     { name = "sphinx-design" },
     { name = "sphinxcontrib-bibtex" },
 ]
+pre = [
+    { name = "spatialdata" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -5350,8 +5354,10 @@ requires-dist = [
     { name = "notebook", specifier = ">=7.4.2" },
     { name = "openpyxl", specifier = ">=3.0.0" },
     { name = "pre-commit", marker = "extra == 'dev'" },
+    { name = "psutil", specifier = ">=5.9.0" },
     { name = "scanpy", specifier = ">=1.11.1" },
     { name = "sopa", specifier = ">=2.0.7" },
+    { name = "spatialdata", marker = "extra == 'pre'", specifier = ">=0.4.0rc0" },
     { name = "spatialdata", extras = ["extra", "torch"] },
     { name = "spatialdata-plot", specifier = ">=0.2.10" },
     { name = "sphinx", marker = "extra == 'doc'", specifier = ">=4.5" },
@@ -5363,7 +5369,7 @@ requires-dist = [
     { name = "squidpy", specifier = ">=1.6.2" },
     { name = "watermark", marker = "extra == 'dev'" },
 ]
-provides-extras = ["dev", "doc"]
+provides-extras = ["dev", "doc", "pre"]
 
 [[package]]
 name = "spatialdata-plot"

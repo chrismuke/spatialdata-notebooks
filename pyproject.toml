@@ -36,6 +36,7 @@ dependencies = [
     "napari[all]>=0.5.5",
     "notebook>=7.4.2",
     "openpyxl>=3.0.0",
+    "psutil>=5.9.0",
     "scanpy>=1.11.1",
     "sopa>=2.0.7",
     "spatialdata-plot>=0.2.10",
